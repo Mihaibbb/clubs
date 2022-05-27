@@ -1,12 +1,21 @@
-
+import logo from "./img/logo.png"
 import './Signin.css';
 import {useState, useRef} from "react";
+import { Helmet } from "react-helmet"
 
 function Signin() {
 
   const containerRef = useRef();
 
   return(
+  <> 
+      <Helmet>
+        <script
+          src="https://kit.fontawesome.com/64d58efce2.js"
+          crossorigin="anonymous"
+          async
+        ></script>
+      </Helmet>
     <div className="container" ref={containerRef}>
     <div className="forms-container">
       <div className="signin-signup">
@@ -83,7 +92,7 @@ function Signin() {
             Sign up
           </button>
         </div>
-        <img src="img/log.svg" className="image" alt="" />
+        <img src={logo} className="image" alt="" />
       </div>
       <div className="panel right-panel">
         <div className="content">
@@ -96,10 +105,11 @@ function Signin() {
             Sign in
           </button>
         </div>
-        <img src="img/register.svg" className="image" alt="" />
+        <img src={logo} className="image" alt="" />
       </div>
     </div>
   </div>
+  </>
   )
 };
 
