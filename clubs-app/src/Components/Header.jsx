@@ -15,7 +15,7 @@ export default function Header() {
                 </div>
 
                 <div className="right-container">
-                    <Link to="/signup">
+                    <Link to="/signin">
                         <li>Sign up</li>
                         <li></li>
                     </Link>

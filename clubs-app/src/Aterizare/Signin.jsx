@@ -1,6 +1,7 @@
-
+import logo from "./img/logo.png"
 import './Signin.css';
 import {useState, useRef} from "react";
+import { Helmet } from "react-helmet"
 
 export default function Signin() {
 
@@ -83,7 +84,7 @@ export default function Signin() {
             Sign up
           </button>
         </div>
-        <img src="img/log.svg" className="image" alt="" />
+        <img src={logo} className="image" alt="" />
       </div>
       <div className="panel right-panel">
         <div className="content">
@@ -96,10 +97,11 @@ export default function Signin() {
             Sign in
           </button>
         </div>
-        <img src="img/register.svg" className="image" alt="" />
+        <img src={logo} className="image" alt="" />
       </div>
     </div>
   </div>
+ 
   )
 };
 
