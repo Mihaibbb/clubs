@@ -14,10 +14,11 @@ import AboutUs from './components/AboutUs'
 import ContactUs from './components/ContactUs'
 
 function App() {
-  const [number, setNumber] = useState(0);
+  
 
   return (
     <div className="App">
+
        <div>
       <Router>
           <Switch>
@@ -27,6 +28,8 @@ function App() {
           </Switch>
       </Router>
     </div>
+        <p>Hello wor1ld!</p>
+
     </div>
   );
 }
