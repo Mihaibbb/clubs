@@ -1,6 +1,6 @@
 import './App.css';
 import {useState} from "react";
-import React from 'react'
+import React from 'react';
 
 import {
   BrowserRouter as Router, 
@@ -8,9 +8,10 @@ import {
   Route
 } from 'react-router-dom'
 
-import Home from './Components/Home'
-import AboutUs from './Components/AboutUs'
-import ContactUs from './Components/ContactUs'
+import Home from './Components/Home';
+import AboutUs from './Components/AboutUs';
+import ContactUs from './Components/ContactUs';
+import Signin from './Aterizare/Signin';
 
 function App() {
   
@@ -20,9 +21,10 @@ function App() {
        <div>
       <Router>
           <Routes>
-            <Route path={'/AboutUs'} component={AboutUs}></Route>
-            <Route path={'/ContactUs'} component={ContactUs}></Route>
-            <Route path={'/'} component={Home}></Route>
+            <Route path={'/AboutUs'} element={<AboutUs/>}></Route>
+            <Route path={'/ContactUs'} element={<ContactUs/>}></Route>
+            <Route path={'/Signin'} element={<Signin/>}></Route>
+            <Route path={'/'} element={<Home/>}></Route>
           </Routes>
       </Router>
     </div>
