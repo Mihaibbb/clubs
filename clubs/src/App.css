@@ -1,4 +1,9 @@
-.App {
+:root
+{
+  --verde-inchis-1: #fff;
+}
+
+np.App {
   text-align: center;
 }
 
