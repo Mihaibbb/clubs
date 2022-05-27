@@ -11,17 +11,15 @@ import {
 import Home from './Components/Home';
 import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
-function App() {
+export default function App() {
   
   return (
-  
       <BrowserRouter>
           <Routes> 
             <Route path="/" element={<Home />} />
           </Routes>
       </BrowserRouter>
-    
   );
 }
 
-export default App;
+
