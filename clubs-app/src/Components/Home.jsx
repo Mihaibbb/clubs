@@ -1,6 +1,8 @@
-
+import Header from "./Header";
 export default function Home() {
     return (
-        <div>Salut!</div>
+        <div className="home-container">
+            <Header />
+        </div>
     );
 }

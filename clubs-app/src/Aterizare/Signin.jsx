@@ -2,11 +2,11 @@
 import './Signin.css';
 import {useState, useRef} from "react";
 
-function Signin() {
+export default function Signin() {
 
   const containerRef = useRef();
 
-  return(
+  return (
     <div className="container" ref={containerRef}>
     <div className="forms-container">
       <div className="signin-signup">
@@ -103,4 +103,3 @@ function Signin() {
   )
 };
 
-export default Signin;

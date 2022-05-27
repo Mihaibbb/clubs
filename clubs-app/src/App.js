@@ -21,10 +21,10 @@ function App() {
        <div>
       <Router>
           <Routes>
-            <Route path={'/AboutUs'} element={<AboutUs/>}></Route>
-            <Route path={'/ContactUs'} element={<ContactUs/>}></Route>
-            <Route path={'/Signin'} element={<Signin/>}></Route>
-            <Route path={'/'} element={<Home/>}></Route>
+            <Route path={'/AboutUs'} element={<AboutUs />} />
+            <Route path={'/ContactUs'} element={<ContactUs />} />
+            <Route path={'/signin'} element={<Signin />} />
+            <Route path={'/'} element={<Home />} />
           </Routes>
       </Router>
     </div>
