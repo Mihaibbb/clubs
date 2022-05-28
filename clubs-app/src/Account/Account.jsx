@@ -52,7 +52,7 @@ export default function Account() {
                     </div>
 
                     <div class="inner"><button type="submit" class="msgBtn2" onClick="return false;" >Submit</button></div>
-               
+                    
                 </div>
             </div>
         </div>

@@ -93,7 +93,7 @@ export default function AddPost() {
                         </textarea>
                         
                         
-                        <input value="Create Club" className="btn solid" onClick={async () => await createClub()} readOnly/>
+                        <input value="Create Post" className="btn solid" onClick={async () => await createClub()} readOnly/>
                         
                     </div>
                     </div>

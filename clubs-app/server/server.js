@@ -145,13 +145,30 @@ app.post('/create-club', (req, res) => {
 
                 database.query(sql, [`${req.body.clubId}_users`], (err4, result) => {
                     if (err4) throw err4;
-
+                    
                     sql = 'INSERT INTO ?? (email, username, posts, comments, sports) VALUES (?, ?, ?, ?, ?)';
                     const placeholders = [`${req.body.clubId}_users`, req.body.email, req.body.username, JSON.stringify([]), JSON.stringify([]), req.body.sport];
                     database.query(sql, placeholders, (err5, result) => {
-                        if (err5) throw err;
-                        res.json({ status: true });
-                        console.log('New club');
+                        
+                        if (err5) throw err5;
+                        sql = "CREATE TABLE IF NOT EXISTS ?? (";
+                        sql += "id int primary key auto_increment not null, ";
+                        sql += "club_id varchar(128) not null, ";
+                        sql += "club_name varchar(128) not null, ";
+                        sql += "owner varchar(256) not null ); ";
+                        database.query(sql, ["uniclubs"], (err6, result) => {
+                            if (err6) throw err6;
+                            
+                            sql = "INSERT INTO ?? (club_id, club_name, owner) VALUES (?, ?, ?)";
+                            database.query(sql, ["uniclubs", req.body.clubId, req.body.clubName, req.body.username], (err7, result) => {
+                                if (err7) throw err;
+                                console.log("here 2 22");
+                                res.json({ status: true });
+                                console.log('New club');
+                            })
+                            
+                        });
+                       
                     });
 
                 });
@@ -273,9 +290,17 @@ app.post("/get-members", (req, res) => {
     });
 });
 
-app.post("/get-posts", (req,res) => {
+app.post("/get-posts", (req, res) => {
     sql = "SELECT * FROM ?? ORDER BY id DESC";
     database.query(sql, [`${req.body.clubId}_posts`], (err, rows) => {
+        if (err) throw err;
+        res.json(rows);
+    });
+});
+
+app.post("/search-club", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE club_name LIKE concat('%' , ?, '%')";
+    database.query(sql, ["uniclubs", req.body.name], (err, rows) => {
         if (err) throw err;
         res.json(rows);
     });

@@ -3,15 +3,15 @@ import "./Home.css";
 import logo from "../img/logo.png";
 import Sidebar from "../Sidebar/Sidebar";
 import Footer from "./Footer";
+import Searchbar from "./Searchbar";
+import { Link } from "react-router-dom";
 
 export default function Home() {
     return (
         <div className="home-container">
             <Header marginTop={4}/>
-             <div className="page-desc">
                 <Sidebar />
-                
-            </div> 
+            {localStorage.getItem("logged") && <Searchbar />}
             <div className="banner">
                 <h2>Chat and play together with UniClub</h2>      
             </div>
@@ -32,9 +32,9 @@ Central to the attainment of flow is a situation in which there is a perfect mat
                     <div className="change">
                          <h2>Be the change!</h2> 
                     </div>
-                    <a href="./signin">
-                        <button className="button"><b> - GET STARTED -</b></button>   
-                    </a> 
+                    <Link to="/signin">
+                        {!localStorage.getItem('logged') && <button className="button"><b> - GET STARTED -</b></button>}   
+                    </Link> 
                     </div>
                     <div className='column'>
                         <div className="dreaptatitlu">
