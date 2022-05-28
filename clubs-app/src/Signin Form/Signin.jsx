@@ -184,8 +184,7 @@ export default function Signin() {
           <div className="content">
             <h3>New here ?</h3>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-              ex ratione. Aliquid!
+            We look forward to showing you how our platform allows you to optimize your lifestyle. Welcome!
             </p>
             <button className="btn transparent" id="sign-up-btn" onClick={() => containerRef.current.classList.add('sign-up-mode')}>
               Sign up
@@ -197,8 +196,7 @@ export default function Signin() {
           <div className="content">
             <h3>One of us ?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-              laboriosam ad deleniti.
+            We are glad to have you back on our platform to optimize your lifestyle. Welcome back!
             </p>
             <button className="btn transparent" id="sign-in-btn" onClick={() => containerRef.current.classList.remove('sign-up-mode')}>
               Sign in
