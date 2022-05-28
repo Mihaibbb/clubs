@@ -13,6 +13,8 @@ import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
 import Signin from './Aterizare/Signin';
 import Sidebar from './Dreapta/Sidebar';
+import Account from './Account/Account';
+
 
 function App() {
   
@@ -26,6 +28,7 @@ function App() {
             <Route path={'/Signin'} element={<Signin/>}></Route>
             <Route path={'/Sidebar'} element={<Sidebar/>}></Route>
             <Route path={'/'} element={<Home/>}></Route>
+            <Route path={'/Account'} element={<Account/>}></Route>
           </Routes>
       </Router>
     </div>

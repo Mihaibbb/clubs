@@ -25,8 +25,10 @@ export default function Header({marginTop}) {
                 <div className="right-container">
                     {localStorage.getItem("logged") ? (
                         <>
-                            <li>Account</li>
+                        <Link to="/account">
+                        <li>Account</li>
                             <li onClick={() => logOut()}>Log Out</li>
+                        </Link>
                         </>
                         
                     ) : (
