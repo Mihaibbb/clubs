@@ -1,0 +1,19 @@
+.banner 
+{
+    width: 100%;
+    min-height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.banner h2 
+{
+    font-size: 65px;
+    max-width: 60%;
+    text-align: center;
+    background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

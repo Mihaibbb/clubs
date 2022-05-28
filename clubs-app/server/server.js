@@ -61,6 +61,7 @@ let sql;
 
 // User sign up
 app.post('/signup', (req, res) => {
+    console.log(req.body);
     sql = "SELECT * FROM ?? WHERE email = ? OR username = ?";
     database.query(sql, ["users", req.body.email, req.body.username], async (err, rows) => {
         if (err) throw err;
@@ -69,11 +70,13 @@ app.post('/signup', (req, res) => {
             return;
         }
         const hashPassword = await bcrypt.hash(req.body.password, 10);
-        const placeholders = ["users", req.body.email, req.body.username, req.body.first_name, req.body.last_name, hashPassword, null, JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), req.body.socket_id];
+        const placeholders = ["users", req.body.email, req.body.username, req.body.firstName, req.body.lastName, hashPassword, null, JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), req.body.socket_id];
         sql = "INSERT INTO ?? (email, username, first_name, last_name, password, profile_image, sports, friends, clubs, socket_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         database.query(sql, placeholders, (err, result) => {
+            if (err) throw err;
             console.log("User inserted!");
-            res.json({signed: true, id: result.insertedId});
+            console.log(result);
+            res.json({signed: true, id: result?.insertId});
         });
     });
 });
@@ -93,6 +96,7 @@ app.post('/login', (req, res) => {
             res.json({error: "Email or password is incorrect!"});
             return;
         }
+        console.log("Logged!");
         res.json({...row, logged: true});
     });
 });

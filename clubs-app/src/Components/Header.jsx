@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import './Header.css';
 
-export default function Header() {
+export default function Header({marginTop}) {
+
+    const logOut = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
     return (
-        <div className="header">
+        <div className="header" style={{marginTop: `${marginTop}px`}}>
             <div className="items">
                 <div className="left-container">
                     <li>Why UniClub?</li>
@@ -11,14 +17,27 @@ export default function Header() {
                 </div>
                 
                 <div className="logo">
-                    <h1>UniClub</h1>
+                    <Link to="/">
+                        <h1>UniClub</h1>
+                    </Link>
                 </div>
 
                 <div className="right-container">
-                    <Link to="/signin">
-                        <li>Sign up</li>
-                        <li></li>
-                    </Link>
+                    {localStorage.getItem("logged") ? (
+                        <>
+                            <li>Account</li>
+                            <li onClick={() => logOut()}>Log Out</li>
+                        </>
+                        
+                    ) : (
+                        <Link to="/signin">
+                            <li>
+                                Sign up
+                            </li>
+                            <li></li>
+                        </Link>
+                    )}
+                   
                 </div>
             </div>
         </div>
