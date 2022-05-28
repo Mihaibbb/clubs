@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
 import './Header.css';
 
 export default function Header({marginTop}) {
@@ -20,6 +21,7 @@ export default function Header({marginTop}) {
                     <Link to="/">
                         <h1>UniClub</h1>
                     </Link>
+                    <img src={logo} width={50}/>
                 </div>
 
                 <div className="right-container">
