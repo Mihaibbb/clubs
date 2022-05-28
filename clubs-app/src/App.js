@@ -14,6 +14,7 @@ import ContactUs from './Components/ContactUs';
 import Signin from './Aterizare/Signin';
 import Sidebar from './Sidebar/Sidebar';
 import Account from './Account/Account';
+import DirectMessaging from './Chatbox/DirectMessaging';
 function App() {
   
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path={'/Sidebar'} element={<Sidebar/>}></Route>
             <Route path={'/'} element={<Home/>}></Route>
             <Route path={'/Account'} element={<Account/>}></Route>
+            <Route path={'/Chatbox'} element={<DirectMessaging/>}></Route>
           </Routes>
       </Router>
     </div>
