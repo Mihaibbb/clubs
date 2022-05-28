@@ -110,8 +110,9 @@ const Sidebar = () => {
       console.log(clubs, clubs.clubs);
       setPersonalClubs(await clubs.clubs);
       clubs.clubs.forEach(async club => {
-        console.log("ok ok")
-        await getMembers(club.id);
+      console.log("ok ok")
+      await getMembers(club.id);
+      localStorage.setItem("clubs", JSON.stringify(clubs.clubs));
     });
     })();
   }, []);

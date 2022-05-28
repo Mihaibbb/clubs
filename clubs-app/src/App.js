@@ -15,6 +15,7 @@ import Clubs from './Clubs/Clubs';
 import AddClub from './Clubs/AddClub';
 import Account from './Account/Account';
 import Footer from './Components/Footer';
+import AddPost from './Clubs/AddPost';
 function App() {
   
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path={'/clubs/:id'} element={<Clubs />} />
             <Route path={'/account'} element={<Account />} />
             <Route path={'/footer'} element={<Footer />} />
+            <Route path={'/add-post'} element={<AddPost />} />
             <Route path={'/'} element={<Home />} />
           </Routes>
       </Router>

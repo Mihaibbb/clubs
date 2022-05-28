@@ -1,14 +1,17 @@
-.card {
+/* .card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
   }
   
   .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
+  } */
   
   .fundal {
     padding: 2px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 .inner {
     display: inline-block;
@@ -31,6 +34,39 @@
 }
 
 .account-image {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    font-size: 75px;
+    color: var(--dark-green);
+    border: 2px solid var(--dark-green);
     border-radius: 50%;
+    padding: 20px;
+    width: 75px;
+}
+
+.account-inputs 
+{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.account-input 
+{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  
+}
+
+.account-input label 
+{
+ 
+  text-align: initial;
+}
+
+.account-input input 
+{
+  width: 100%;
+  max-width: 300px;
 }

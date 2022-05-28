@@ -273,5 +273,13 @@ app.post("/get-members", (req, res) => {
     });
 });
 
+app.post("/get-posts", (req,res) => {
+    sql = "SELECT * FROM ?? ORDER BY id DESC";
+    database.query(sql, [`${req.body.clubId}_posts`], (err, rows) => {
+        if (err) throw err;
+        res.json(rows);
+    });
+});
+
 
 app.listen(8080, () => console.log('Server listen on 8080!'));
