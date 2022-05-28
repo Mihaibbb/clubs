@@ -12,7 +12,7 @@ import Home from './Components/Home';
 import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
 import Signin from './Aterizare/Signin';
-import Sidebar from './Dreapta/Sidebar';
+import Sidebar from './Sidebar/Sidebar';
 
 function App() {
   

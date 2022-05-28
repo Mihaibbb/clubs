@@ -1,7 +1,7 @@
 import Header from "./Header";
 import "./Home.css";
 import logo from "../img/logo.png";
-import Sidebar from "../Dreapta/Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function Home() {
     return (
@@ -14,7 +14,7 @@ export default function Home() {
             <div className="banner">
                 <h2>Chat and play together with UniClub</h2>      
             </div>
-            <img src={logo} />
+            
            
         </div>
     );
