@@ -15,9 +15,9 @@ export default function Home() {
                 <h2>Chat and play together with UniClub</h2>      
             </div>
 
-            <div class='some-page-wrapper'>
-                <div class='row'>
-                    <div class='column'>
+            <div className='some-page-wrapper'>
+                <div className='row'>
+                    <div className='column'>
                          <div className="stangatitlu">
                             <h1>TODAY...</h1>
                         </div>
@@ -27,12 +27,12 @@ Central to the attainment of flow is a situation in which there is a perfect mat
                 
                          </div>
                     </div>
-                    <div class='column'>
+                    <div className='column'>
                     <div className="change">
                 <h2>Be the change!</h2>      
             </div>
                     </div>
-                    <div class='column'>
+                    <div className='column'>
                         <div className="dreaptatitlu">
                              <h1>...BE TOMORROW</h1>
                         </div>

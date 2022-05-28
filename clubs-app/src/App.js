@@ -9,11 +9,12 @@ import {
 } from 'react-router-dom'
 
 import Home from './Components/Home';
-import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
-import Signin from './Aterizare/Signin';
-import Sidebar from './Sidebar/Sidebar';
+import Signin from './Signin Form/Signin';
+import Clubs from './Clubs/Clubs';
+import AddClub from './Clubs/AddClub';
 import Account from './Account/Account';
+import Footer from './Components/Footer';
 function App() {
   
   return (
@@ -21,18 +22,19 @@ function App() {
        <div>
       <Router>
           <Routes>
-            <Route path={'/AboutUs'} element={<AboutUs/>}></Route>
-            <Route path={'/ContactUs'} element={<ContactUs/>}></Route>
-            <Route path={'/Signin'} element={<Signin/>}></Route>
-            <Route path={'/Sidebar'} element={<Sidebar/>}></Route>
-            <Route path={'/'} element={<Home/>}></Route>
-            <Route path={'/Account'} element={<Account/>}></Route>
+            <Route path={'/contactus'} element={<ContactUs />} />
+            <Route path={'/signin'} element={<Signin />} />
+            <Route path={'/add-club'} element={<AddClub />} />
+            <Route path={'/clubs/:id'} element={<Clubs />} />
+            <Route path={'/account'} element={<Account />} />
+            <Route path={'/footer'} element={<Footer />} />
+            <Route path={'/'} element={<Home />} />
           </Routes>
       </Router>
     </div>
         <p></p>
-
     </div>
+    
   );
 }
 

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import logo from "../img/logo.png";
-import './Header.css';
+import './Footer.css';
 
-export default function Header({marginTop}) {
+export default function Footer() {
 
     const logOut = () => {
         localStorage.clear();
@@ -10,7 +10,7 @@ export default function Header({marginTop}) {
     };
 
     return (
-        <div className="header" style={{marginTop: `${marginTop}px`}}>
+        <div className="footer">
             <div className="items">
                 <div className="left-container">
                     <li>Why UniClub?</li>
@@ -19,7 +19,7 @@ export default function Header({marginTop}) {
                 
                 <div className="logo">
                     <Link to="/">
-                        <h1>UniClub</h1>
+                        <h4>Designed by: <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">UniClub.com</a></h4>
                     </Link>
                     <img src={logo} width={50}/>
                 </div>

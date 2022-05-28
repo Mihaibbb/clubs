@@ -80,8 +80,9 @@ export default function Signin() {
     localStorage.setItem("first-name", firstName);
     localStorage.setItem("last-name", lastName);
     localStorage.setItem("username", usernameUp);
-    navigate("/");
     alert("User registered!");
+    navigate("/");
+   
   };
 
   return (
