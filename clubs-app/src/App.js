@@ -12,19 +12,20 @@ import Home from './Components/Home';
 import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
 import Signin from './Aterizare/Signin';
+import Sidebar from './Dreapta/Sidebar';
 
 function App() {
   
   return (
     <div className="App">
-
        <div>
       <Router>
           <Routes>
-            <Route path={'/AboutUs'} element={<AboutUs />} />
-            <Route path={'/ContactUs'} element={<ContactUs />} />
-            <Route path={'/signin'} element={<Signin />} />
-            <Route path={'/'} element={<Home />} />
+            <Route path={'/AboutUs'} element={<AboutUs/>}></Route>
+            <Route path={'/ContactUs'} element={<ContactUs/>}></Route>
+            <Route path={'/Signin'} element={<Signin/>}></Route>
+            <Route path={'/Sidebar'} element={<Sidebar/>}></Route>
+            <Route path={'/'} element={<Home/>}></Route>
           </Routes>
       </Router>
     </div>
