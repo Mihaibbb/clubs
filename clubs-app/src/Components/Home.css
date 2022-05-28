@@ -6,11 +6,12 @@
 .banner 
 {
     width: 100%;
-    min-height: 350px;
+    min-height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    animation: banner_text 1.5s 1;
 }
 
 .banner h2 
@@ -22,3 +23,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+@keyframes banner_text {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: initial;
+    }
+};

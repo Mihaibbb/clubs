@@ -74,3 +74,15 @@
 {
     cursor: pointer;
 }
+
+.header .items .logo img {
+    animation: rotate_logo 1s linear;
+    animation-delay: 1s;
+}
+
+@keyframes rotate_logo {
+   
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
