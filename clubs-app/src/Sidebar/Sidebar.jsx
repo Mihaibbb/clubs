@@ -77,7 +77,7 @@ const Sidebar = () => {
       const clubs = await resJSON.json();
       console.log(clubs);
       setPersonalClubs(await clubs.clubs);
-      await clubs.forEach(async club => await getMembers(club.id));
+      await clubs.length > 0 && await clubs.forEach(async club => await getMembers(club.id));
     })();
   }, []);
 

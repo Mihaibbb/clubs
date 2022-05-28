@@ -13,6 +13,7 @@ import ContactUs from './Components/ContactUs';
 import Signin from './Signin Form/Signin';
 import Clubs from './Clubs/Clubs';
 import AddClub from './Clubs/AddClub';
+import Account from './Account/Account';
 
 function App() {
   
@@ -21,10 +22,11 @@ function App() {
        <div>
       <Router>
           <Routes>
-            <Route path={'/ContactUs'} element={<ContactUs />} />
-            <Route path={'/Signin'} element={<Signin/>} />
+            <Route path={'/contactus'} element={<ContactUs />} />
+            <Route path={'/signin'} element={<Signin />} />
             <Route path={'/add-club'} element={<AddClub />} />
             <Route path={'/clubs/:id'} element={<Clubs />} />
+            <Route path={'/account'} element={<Account />} />
             <Route path={'/'} element={<Home />} />
           </Routes>
       </Router>
