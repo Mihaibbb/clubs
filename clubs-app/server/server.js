@@ -126,7 +126,7 @@ app.post('/create-club', (req, res) => {
             // create table for the new club
             sql = 'CREATE TABLE IF NOT EXISTS ?? (';
             sql += 'id int(11) auto_increment primary key not null, ';
-            sql += 'from varchar(256) not null, ';
+            sql += 'creator varchar(256) not null, ';
             sql += 'content text not null, ';
             sql += 'title varchar(128) not null, ';
             sql += 'comments json not null );';
@@ -202,7 +202,7 @@ app.post('/update-account', (req, res) => {
 });
 
 app.post('/create-post', (req, res) => {
-    sql = "INSERT INTO ?? (from, content, title, comments) VALUES (?, ?, ?, ?)";
+    sql = "INSERT INTO ?? (creator, content, title, comments) VALUES (?, ?, ?, ?)";
     database.query(sql, [`${req.body.clubId}_posts`, req.body.username, req.body.content, req.body.title, JSON.stringify([])], (err, result) => {
         if (err) throw err;
         res.json({ posted: true });

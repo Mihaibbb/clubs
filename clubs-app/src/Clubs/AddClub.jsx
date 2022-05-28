@@ -11,13 +11,51 @@ import "./AddClub.css";
 export default function AddClub() {
 
     const [clubName, setClubName] = useState("");
+    const [sport, setSport] = useState('football');
     const containerRef = useRef();
+    const sportsRef = useRef();
     const navigate = useNavigate();
-    //const [sport, setSport] = useState("football")
 
+    const getClubId = () => {
+        const length = 8;
+        let result           = '';
+        let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) 
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        return result;
+    };
+    
     const createClub = async () => {
         if (clubName.length < 4) return;
+        const clubId = getClubId();
+        console.log(clubId);
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: localStorage.getItem("username"),
+                email: localStorage.getItem("email"),
+                id: localStorage.getItem("id"),
+                sport: sport,
+                clubId: clubId,
+                clubName: clubName
+            })
+        };
+
+        const resJSON = await fetch("http://localhost:8080/create-club", options);
+        const res = await resJSON.json();
+        if (res.error) {
+            alert("ERROR!");
+            return;
+        }
+
+        navigate("/");
     };
+
+    if (!localStorage.getItem("logged")) navigate("/");
 
     return (
         <> 
@@ -33,7 +71,7 @@ export default function AddClub() {
                 <div className="forms-container">
                     <div className="signin-signup">
                     <div className="form sign-in-form">
-                        <h2 className="title">Sign in</h2>
+                        <h2 className="title">Create Club</h2>
                         <div className="input-field">
                             <i className="fas fa-user"></i>
                             <input 
@@ -45,29 +83,45 @@ export default function AddClub() {
                             
                         </div>
 
-                        <div className="sports-container">
-                            <div className="sport">
+                        <div className="sports-container" ref={sportsRef}>
+                            <div className="sport active" onClick={e => {
+                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
+                                sportsRef.current.childNodes[0].classList.add("active");
+                                setSport("football");
+                            }}>
                                 <FontAwesomeIcon
                                     icon={faSoccerBall}
                                 />
                                 <h3>Football</h3>
                                 
                             </div>
-                            <div className="sport">
+                            <div className="sport" onClick={e => {
+                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
+                                sportsRef.current.childNodes[1].classList.add("active");
+                                setSport("basketball");
+                            }}>
                                 <FontAwesomeIcon
                                     icon={faBasketball}
                                 />
                                 <h3>Basketball</h3>
                                 
                             </div>
-                            <div className="sport">
+                            <div className="sport" onClick={e => {
+                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
+                                sportsRef.current.childNodes[2].classList.add("active");
+                                setSport("volley");
+                            }}>
                                 <FontAwesomeIcon
                                     icon={faVolleyball}
                                 />
                                 <h3>Volley</h3>
                                 
                             </div>
-                            <div className="sport">
+                            <div className="sport" onClick={e => {
+                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
+                                sportsRef.current.childNodes[3].classList.add("active");
+                                setSport("ping_pong");
+                            }}>
                                 <FontAwesomeIcon
                                     icon={faPingPongPaddleBall}
                                 />
@@ -76,22 +130,8 @@ export default function AddClub() {
                             </div>
                         </div>
                         
-                        <input value="Create Club" className="btn solid" onClick={async () => await createClub()} />
-                        <p className="social-text">Or Sign in with social platforms</p>
-                        <div className="social-media">
-                        <a href="#" className="social-icon">
-                            <i className="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" className="social-icon">
-                            <i className="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" className="social-icon">
-                            <i className="fab fa-google"></i>
-                        </a>
-                        <a href="#" className="social-icon">
-                            <i className="fab fa-linkedin-in"></i>
-                        </a>
-                        </div>
+                        <input value="Create Club" className="btn solid" onClick={async () => await createClub()} readOnly/>
+                        
                     </div>
                     </div>
                 </div>

@@ -7,12 +7,13 @@ import { faBasketballBall, faCoffee, faSoccerBall, faTableTennis, faTableTennisP
 
 
 export default function Account() {
+
     return (
         <div className="account-container">
              <Header marginTop={4}/>
                 <Sidebar />
                     <h1><b>Account</b></h1>
-                    <img src={noprofil} className="image" alt="" />
+                    <img src={noprofil} className="account-image" alt="" />
             <div className="card">
                 <div className="fundal">
                 

@@ -6,7 +6,7 @@ import * as AiIcons from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faBasketball, faPingPongPaddleBall, faPlus, faSoccerBall, faTimes, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import "./Sidebar.css";
 
@@ -41,7 +41,7 @@ const SidebarNav = styled.nav`
   justify-content: center;
   position: fixed;
   top: 0;
-  transition: all 650ms ease-in-out;
+  transition: all 350ms ease-in-out;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   
   z-index: 10;
@@ -50,14 +50,46 @@ const SidebarNav = styled.nav`
 const SidebarWrap = styled.div`
   width: 100%;
 `;
+
+const SPORTS = {
+  football: <FontAwesomeIcon icon={faSoccerBall} />,
+  basketball: <FontAwesomeIcon icon={faBasketball} />,
+  volley: <FontAwesomeIcon icon={faVolleyball} />,
+  ping_pong: <FontAwesomeIcon icon={faPingPongPaddleBall} />
+};
   
 const Sidebar = () => {
   
   const [sidebar, setSidebar] = useState(false);
   const [personalClubs, setPersonalClubs] = useState(null);
-  const members = new Array();
+  const [members, setMembers] = useState([]);
   const showSidebar = () => setSidebar(!sidebar);
   const navigate = useNavigate();
+
+  
+  const getMembers = async (clubId) => {
+    console.log('here');
+      const options = {
+          method: 'POST',
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              clubId: clubId,
+              email: localStorage.getItem("email")
+          })
+      };
+
+      const resJSON = await fetch("http://localhost:8080/get-members", options);
+      const res = await resJSON.json();
+      console.log(await res.members);
+      
+      setMembers(currMembers => {
+        console.log(currMembers);
+        return [...currMembers, res.members];
+    });
+      
+  };
 
   useEffect(() => {
     (async () => {
@@ -75,29 +107,15 @@ const Sidebar = () => {
 
       const resJSON = await fetch("http://localhost:8080/get-clubs", options);
       const clubs = await resJSON.json();
-      console.log(clubs);
+      console.log(clubs, clubs.clubs);
       setPersonalClubs(await clubs.clubs);
-      await clubs.length > 0 && await clubs.forEach(async club => await getMembers(club.id));
+      clubs.clubs.forEach(async club => {
+        console.log("ok ok")
+        await getMembers(club.id);
+    });
     })();
   }, []);
 
-  const getMembers = async (clubId) => {
-      const options = {
-          method: 'POST',
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-              clubId: clubId,
-              email: localStorage.getItem("email")
-          })
-      };
-
-      const resJSON = await fetch("http://localhost:8080/get-members", options);
-      const res = await resJSON.json();
-      members.push(await res.members);
-      
-  };
   
   return personalClubs && (
     <>
@@ -109,13 +127,15 @@ const Sidebar = () => {
         </Nav>
         <SidebarNav sidebar={sidebar} >
           <SidebarWrap>
-            <NavIcon to="#">
-              <FontAwesomeIcon icon={faTimes} className="icon" onClick={showSidebar} />
+            <NavIcon to="#" onClick={showSidebar}>
+              <FontAwesomeIcon icon={faTimes} className="icon" />
             </NavIcon>
             {personalClubs.map((item, index) => {
               return (
-                <div className="group-container">
-                  <div className=""></div>
+                <div className="group-container" key={index} onClick={() => navigate(`/clubs/${item.id}`)}>
+                  <div className="icon">
+                    {SPORTS[item.sport]}
+                  </div>
                   <h3>{item.name}</h3>
                   <h4>{members[index]}</h4>
                 </div>

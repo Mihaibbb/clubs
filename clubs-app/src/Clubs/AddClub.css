@@ -5,7 +5,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    margin: 1.5rem auto;
 }
 
 .sports-container .sport 
@@ -18,10 +19,15 @@
     background: rgba(0, 0, 0, .2);
     column-gap: .5rem;
     padding: 1rem;
+    border-radius: 34px;
+    cursor: pointer;
+    
+    transition: all 450ms ease-in-out;
 }
 
-.sport-container .sport.active 
+.sports-container .sport.active 
 {
-    background: linear-gradient(135deg, var(--lightest-green), var(--darkest-green));
-
+    
+    background: linear-gradient(135deg, var(--darkest-green), var(--lightest-green));
+    color: #fff;
 }

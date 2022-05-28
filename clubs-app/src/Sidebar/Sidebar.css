@@ -26,6 +26,7 @@
     align-items: center;
     gap: 1rem;
     color: #fff;
+    cursor: pointer;
 }
 
 .group-container .fa-users
