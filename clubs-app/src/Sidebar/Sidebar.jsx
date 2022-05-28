@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 import "./Sidebar.css";
 
 const Nav = styled.div`
-  background: #15171c;
+  background: linear-gradient(135deg, var(--darkest-green), var(--lightest-green));
   height: 80px;
   width: 80px;
   display: flex;
@@ -34,7 +34,7 @@ const NavIcon = styled(Link)`
 `;
   
 const SidebarNav = styled.nav`
-  background: #15171c;
+  background: #15171C;
   width: 250px;
   height: 100vh;
   display: flex;

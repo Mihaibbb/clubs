@@ -85,7 +85,7 @@ export default function AddPost() {
                         
                         <textarea 
                             rows={7} 
-                            placeholder="Post content..."
+                            placeholder="Content..."
                             value={postContent}
                             onChange={e => setPostContent(e.target.value)}
                         >
@@ -93,7 +93,7 @@ export default function AddPost() {
                         </textarea>
                         
                         
-                        <input value="Create Club" className="btn solid" onClick={async () => await createClub()} readOnly/>
+                        <input value="Post" className="btn solid" onClick={async () => await createClub()} readOnly/>
                         
                     </div>
                     </div>
@@ -102,10 +102,10 @@ export default function AddPost() {
                 <div className="panels-container">
                     <div className="panel left-panel">
                     <div className="content">
-                        <h3>New here ?</h3>
+                        <h3>Post content!</h3>
                         <p>
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                        ex ratione. Aliquid!
+                        Post something that you teammates can see. Remember to keep a decent language!
+                        Have fun!
                         </p>
                         
                     </div>
