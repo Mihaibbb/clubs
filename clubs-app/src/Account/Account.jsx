@@ -54,6 +54,7 @@ export default function Account() {
 
   return (
     <> 
+
       <Header marginTop={0}/>
       <Helmet>
         <script
@@ -62,11 +63,17 @@ export default function Account() {
           async
         ></script>
       </Helmet>
+      
       <div className="container sign-up-mode" ref={containerRef}>
-      <div className="forms-container">
+      <div className="text11" >
+         <h1>Those are your account details!</h1>
+
+         <h3>You can easily update them!
+         </h3>
+        </div> 
         <div className="signin-signup">
           <div className="form sign-up-form">
-          <div className="poza"> <img src={noprofil} /> </div>
+          
             <div className="input-field">
               <i className="fas fa-user"></i>
               <input type="text" placeholder="First Name" value={firstName} onChange={e => setFirstName(e.target.value)} />
@@ -93,8 +100,18 @@ export default function Account() {
             </div>
           </div>
         </div>
-      </div>
+        <div className="panel right-panel">
+          <div className="content">
+            <h3>One of us ?</h3>
+            <p>
+            We are glad to have you back on our platform to optimize your lifestyle. Welcome back!
+            </p>
+            <button className="btn transparent" id="sign-in-btn" onClick={() => containerRef.current.classList.remove('sign-up-mode')}>
+              Sign in
+            </button>
+          </div>
     </div>
+  </div>
     </>
   );
 };

@@ -13,8 +13,8 @@ export default function Footer() {
         <div className="footer">
             <div className="items">
                 <div className="left-container">
-                    <li>Why UniClub?</li>
-                    <li>How it works?</li>
+                <a href="#whyus">Why us?</a>
+                <a href="#howworks">How it works?</a>
                 </div>
                 
                 <div className="logo">

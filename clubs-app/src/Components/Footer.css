@@ -26,6 +26,9 @@
 {
     text-decoration: none;
     color: initial;
+    list-style-type: none;
+    color: white;
+    cursor: pointer;
 }
 
 .footer .items .logo 

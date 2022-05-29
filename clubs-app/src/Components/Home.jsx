@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <div className="home-container">
             <Header marginTop={4}/>
-            <Sidebar />
+                <Sidebar />
             {localStorage.getItem("logged") && <Searchbar />}
             <div className="banner">
                 <h2>Chat and play together with UniClub</h2>      
@@ -24,7 +24,7 @@ export default function Home() {
                         </div>
                         <div className="text">
                             <p><b>More than 1 in 3 people is obese.</b> Sport and healthy nutrition is the only way to combat the numbers. Flow is characterised by complete immersion in an activity, to the degree that nothing else matters.
-The attainment of flow is a situation in which there is a perfect match between the athletes</p>
+he attainment of flow is a situation in which there is a perfect match between the athletes</p>
                 
                          </div>
                     </div>

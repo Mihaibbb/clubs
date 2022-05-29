@@ -104,6 +104,9 @@ html
     margin-right: 20px;
    
   }
+.change h2{
+  line-height: 80px;
+}
 .change 
 {
     font-size: 40px;
