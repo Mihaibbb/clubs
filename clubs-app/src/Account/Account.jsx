@@ -8,49 +8,15 @@ import { useNavigate } from "react-router";
 export default function Account() {
 
   const containerRef = useRef();
-  const [emailIn, setEmailIn] = useState("");
-  const [passwordIn, setPasswordIn] = useState("");
+ 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [usernameUp, setUsernameUp] = useState("");
-  const [emailUp, setEmailUp] = useState("");
-  const [passwordUp, setPasswordUp] = useState("");
+  const [useranme, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();    
     
-  const signUpForm = async () => {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: emailUp,
-        password: passwordUp,
-        firstName: firstName,
-        lastName: lastName,
-        username: usernameUp,
-        socket_id: "012032-4023"
-      })
-    };
-
-    const resJSON = await fetch("http://localhost:8080/signup", options);
-    const res = await resJSON.json();
-
-    if (res.error) {
-      return;
-    }
-
-    localStorage.setItem("id", await res.id);
-    localStorage.setItem("logged", true);
-    localStorage.setItem("email", emailUp);
-    localStorage.setItem("first-name", firstName);
-    localStorage.setItem("last-name", lastName);
-    localStorage.setItem("username", usernameUp);
-    alert("User registered!");
-    navigate("/");
-   
-  };
 
   return (
     <> 

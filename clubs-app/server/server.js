@@ -194,7 +194,7 @@ app.post('/join-club', (req, res) => {
             name: req.body.clubName,
             owner: false,
             date: new Date(),
-            
+            sport: req.body.sport
         }];
 
         sql = "UPDATE ?? SET clubs = ? WHERE id = ?";
@@ -250,12 +250,14 @@ app.post('/create-comment', (req, res) => {
     database.query(sql, [`${req.body.clubId}_posts`, req.body.postId], (err, rows) => {
         if (err) throw err;
         if (rows.length !== 1) {
+            console.log(rows.length);
             res.json({error: "The post was not found"});
             return;
         }
         const newComments = [...JSON.parse(rows[0]["comments"]), {
             from: req.body.username,
-            content: req.body.content
+            content: req.body.content,
+            date: new Date()
         }];
 
         sql = "UPDATE ?? SET comments = ? WHERE id = ?";
@@ -296,6 +298,7 @@ app.post('/get-clubs', (req, res) => {
         }
 
         const row = rows[0];
+        
         res.json({clubs: JSON.parse(row.clubs)});
         console.log("here", JSON.parse(row.clubs));
     });
@@ -318,8 +321,8 @@ app.post("/get-posts", (req, res) => {
 });
 
 app.post("/search-club", (req, res) => {
-    sql = "SELECT * FROM ?? WHERE club_name LIKE concat('%' , ?, '%')";
-    database.query(sql, ["uniclubs", req.body.name], (err, rows) => {
+    sql = "SELECT * FROM ?? WHERE club_name LIKE concat('%' , ?, '%') OR club_id LIKE concat('%', ?, '%')";
+    database.query(sql, ["uniclubs", req.body.name, req.body.name], (err, rows) => {
         if (err) throw err;
         res.json(rows);
     });
@@ -332,6 +335,31 @@ app.post("/check-club", (req, res) => {
         const data = JSON.parse(rows[0]["clubs"]).find(club => club.id === req.body.clubId);
         if (data) res.json({check: true});
         else res.json({check: false});
+    });
+});
+
+app.post("/get-comments", (req, res) => {
+    sql = "SELECT * FROM ?? ORDER BY id DESC;";
+    database.query(sql, [`${req.body.clubId}_posts`], (err, rows) => {
+        if (err) throw err;
+        const comments = [];
+        rows.forEach(row => {
+            let postComments = [];
+            JSON.parse(row.comments).forEach(comment => {
+                postComments.push(comment)
+            });
+            comments.push(postComments);
+        });
+
+        res.json({comments: comments});
+    });
+});
+
+app.post("/people-in-club", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE club_id = ?";
+    database.query(sql, ["uniclubs", req.body.clubId], (err, rows) => {
+        if (err) throw err;
+        res.json({people: rows[0]["people"]});
     });
 });
 

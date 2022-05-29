@@ -12,6 +12,7 @@ export default function AddClub() {
 
     const [clubName, setClubName] = useState("");
     const [sport, setSport] = useState('football');
+    const [error, setError] = useState('');
     const containerRef = useRef();
     const sportsRef = useRef();
     const navigate = useNavigate();
@@ -27,7 +28,10 @@ export default function AddClub() {
     };
     
     const createClub = async () => {
-        if (clubName.length < 4) return;
+        if (clubName.length < 4) {
+            setError("Club's name must be at least 4 characters!")
+            return;
+        }
         const clubId = getClubId();
         console.log(clubId);
         const options = {
@@ -48,7 +52,7 @@ export default function AddClub() {
         const resJSON = await fetch("http://localhost:8080/create-club", options);
         const res = await resJSON.json();
         if (res.error) {
-            alert("ERROR!");
+            setError(res.error);
             return;
         }
 
@@ -131,7 +135,9 @@ export default function AddClub() {
                         </div>
                         
                         <input value="Create Club" className="btn solid" onClick={async () => await createClub()} readOnly/>
-                        
+                        <div className="errors">
+                            <p>{error}</p>
+                        </div>
                     </div>
                     </div>
                 </div>
