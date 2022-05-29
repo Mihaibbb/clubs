@@ -229,13 +229,6 @@ app.post('/join-club', (req, res) => {
     });
 });
 
-app.post('/update-account', (req, res) => {
-    sql = "UPDATE ?? SET email = ?, username = ?, first_name = ?, last_name = ?, profile_image = ?, sports = ? WHERE id = ?";
-    database.query(sql, ["users", req.body.email, req.body.username, req.body.firstName, req.body.lastName, req.body.profileImage, req.body.sports, req.body.id], (err, result) => {
-        if (err) throw err;
-        
-    });
-});
 
 app.post('/create-post', (req, res) => {
     sql = "INSERT INTO ?? (creator, content, title, comments) VALUES (?, ?, ?, ?)";
@@ -361,6 +354,15 @@ app.post("/people-in-club", (req, res) => {
         if (err) throw err;
         res.json({people: rows[0]["people"]});
     });
+});
+
+app.post("/update-account", (req, res) => {
+    sql = "UPDATE ?? SET email = ?, username = ?, first_name = ?, last_name = ? WHERE id = ?";
+    database.query(sql, ["users", req.body.email, req.body.username, req.body.first_name, req.body.last_name, req.body.id], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+    });
+
 });
 
 
