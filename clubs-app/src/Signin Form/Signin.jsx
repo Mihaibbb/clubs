@@ -15,10 +15,15 @@ export default function Signin() {
   const [usernameUp, setUsernameUp] = useState("");
   const [emailUp, setEmailUp] = useState("");
   const [passwordUp, setPasswordUp] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const signInForm = async () => {
+    if (emailIn.length < 4 || passwordIn.length < 8) {
+      setError("Email or password is too short");
+      return;
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -34,6 +39,7 @@ export default function Signin() {
     const res = await resJSON.json();
 
     if (await res.error) {
+      setError(res.error);
       return;
     }
     
@@ -46,12 +52,15 @@ export default function Signin() {
     localStorage.setItem("sports", res["sports"]);
     localStorage.setItem("friends", res["friends"]);
     localStorage.setItem("clubs", res["clubs"]);
-    alert("User connected!");
     
     navigate("/");
   };
 
   const signUpForm = async () => {
+    if (emailUp.length < 4 || passwordUp.length < 8) {
+      setError("Email or password is too short");
+      return;
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -72,6 +81,7 @@ export default function Signin() {
 
     if (res.error) {
       console.log(res.error);
+      setError(res.error);
       return;
     }
 
@@ -81,7 +91,6 @@ export default function Signin() {
     localStorage.setItem("first-name", firstName);
     localStorage.setItem("last-name", lastName);
     localStorage.setItem("username", usernameUp);
-    alert("User registered!");
     navigate("/");
    
   };
@@ -115,6 +124,12 @@ export default function Signin() {
               <input type="password" placeholder="Password" value={passwordIn} onChange={e => setPasswordIn(e.target.value)} />
             </div>
             <input value="Login" className="btn solid" onClick={async () => await signInForm()} />
+            
+            <div className="errors">
+              <p>{error}</p>
+            </div>
+
+            
             <p className="social-text">Or Sign in with social platforms</p>
             <div className="social-media">
               <a href="#" className="social-icon">
@@ -157,6 +172,10 @@ export default function Signin() {
             <div className="input-field">
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" value={passwordUp} onChange={e => setPasswordUp(e.target.value)}/>
+            </div>
+
+            <div className="errors">
+              <p>{error}</p>
             </div>
 
             <input className="btn" value="Sign up" onClick={async () => await signUpForm()} />

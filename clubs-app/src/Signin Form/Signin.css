@@ -71,6 +71,13 @@ i
   margin-bottom: 10px;
 }
 
+.errors p
+{
+  color: crimson;
+  font-size: 19px;
+  font-family: "Poppins";
+}
+
 .input-field {
   max-width: 380px;
   width: 100%;

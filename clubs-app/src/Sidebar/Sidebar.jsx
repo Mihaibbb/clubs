@@ -85,17 +85,16 @@ const Sidebar = () => {
           },
           body: JSON.stringify({
               clubId: clubId,
-              email: localStorage.getItem("email")
           })
       };
 
-      const resJSON = await fetch("http://localhost:8080/get-members", options);
+      const resJSON = await fetch("http://localhost:8080/people-in-club", options);
       const res = await resJSON.json();
-      console.log(await res.members);
+      console.log(await res.people);
       
       setMembers(currMembers => {
         console.log(currMembers);
-        return [...currMembers, res.members];
+        return [...currMembers, res.people];
     });
       
   };
@@ -116,7 +115,8 @@ const Sidebar = () => {
 
       const resJSON = await fetch("http://localhost:8080/get-clubs", options);
       const clubs = await resJSON.json();
-      console.log(clubs, clubs.clubs);
+      console.log("CLUUUUBS", clubs, clubs.clubs);
+     
       setPersonalClubs(await clubs.clubs);
       clubs.clubs.forEach(async club => {
       console.log("ok ok")

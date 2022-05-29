@@ -8,29 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 
-export default function AddPost() {
+export default function AddComment() {
 
-    const [postName, setPostName] = useState("");
+    const [commentName, setCommentName] = useState("");
     const [postContent, setPostContent] = useState("");
-    const [sport, setSport] = useState('football');
     const containerRef = useRef();
-    const sportsRef = useRef();
     const navigate = useNavigate();
     const location = useLocation();
-    const { clubId } = location.state;
-
-    const getClubId = () => {
-        const length = 8;
-        let result           = '';
-        let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let charactersLength = characters.length;
-        for ( let i = 0; i < length; i++ ) 
-          result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        return result;
-    };
+    const { clubId, postIdx } = location.state;
     
-    const createClub = async () => {
-        if (postName.length < 4) return;
+    const createComment = async () => {
+        if (postContent.length < 3) return;
         
         console.log(clubId);
         const options = {
@@ -40,16 +28,18 @@ export default function AddPost() {
             },
             body: JSON.stringify({
                 content: postContent,
-                title: postName,
                 username: localStorage.getItem("username"),
-                clubId: clubId
+                clubId: clubId,
+                postId: postIdx + 1,
+                email: localStorage.getItem("email")
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/create-post", options);
+        const resJSON = await fetch("http://localhost:8080/create-comment", options);
         const res = await resJSON.json();
+        console.log(clubId, postIdx);
         if (res.error) {
-            alert("ERROR!");
+            alert(res.error);
             return;
         }
 
@@ -72,16 +62,16 @@ export default function AddPost() {
                 <div className="forms-container">
                     <div className="signin-signup">
                     <div className="form sign-in-form">
-                        <h2 className="title">Create a post</h2>
-                        <div className="input-field">
+                        <h2 className="title">Create a comment</h2>
+                        {/* <div className="input-field">
                             <i className="fas fa-user"></i>
                             <input 
                                 type="text" 
                                 placeholder="Post title..." 
-                                value={postName} 
-                                onChange={e => setPostName(e.target.value)} 
+                                value={commentName} 
+                                onChange={e => setCommentName(e.target.value)} 
                             />
-                        </div>
+                        </div> */}
                         
                         <textarea 
                             rows={7} 
@@ -91,15 +81,9 @@ export default function AddPost() {
                         >
 
                         </textarea>
-                        
-<<<<<<< HEAD
-                        
-                        <input value="Post" className="btn solid" onClick={async () => await createClub()} readOnly/>
-=======
-            
-                        <input value="Create Post" className="btn solid" onClick={async () => await createClub()} readOnly/>
->>>>>>> 480b66678e831ec5573cebd305c9d0618318d8a4
-                        
+
+                        <input value="Create Comment" className="btn solid" onClick={async () => await createComment()} readOnly/>
+
                     </div>
                     </div>
                 </div>
@@ -107,7 +91,7 @@ export default function AddPost() {
                 <div className="panels-container">
                     <div className="panel left-panel">
                     <div className="content">
-                        <h3>Post content!</h3>
+                        <h3>Write a comment on a post!</h3>
                         <p>
                         Post something that you teammates can see. Remember to keep a decent language!
                         Have fun!

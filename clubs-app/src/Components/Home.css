@@ -110,7 +110,8 @@ html
 .change 
 {
     font-size: 40px;
-    border-radius: 15px; 
+    border-radius: 15px;
+    line-height: 35px;
     text-align: center;
     display: flex;
     color: black;
@@ -119,6 +120,12 @@ html
     text-decoration: underline;     
     text-decoration-color: var(--lightest-green);  
 }
+
+.change h2
+{
+    line-height: 80px;
+}
+
   .stangatitlu{
       color: var(--darkest-green);
     /* background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));

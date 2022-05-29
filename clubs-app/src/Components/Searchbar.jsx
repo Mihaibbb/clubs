@@ -47,7 +47,7 @@ export default function Searchbar() {
         return found;
     };
 
-    const joinClub = async (clubId, clubName) => {
+    const joinClub = async (clubId, clubName, sport) => {
         const options = {
             method: "POST",
             headers: {
@@ -57,7 +57,9 @@ export default function Searchbar() {
                 id: localStorage.getItem("id"),
                 email: localStorage.getItem("email"),
                 username: localStorage.getItem("username"),
-                clubId: clubId
+                clubId: clubId, 
+                clubName: clubName,
+                sport: sport
             })
         };
 
@@ -70,6 +72,7 @@ export default function Searchbar() {
             name: clubName,
             owner: false,
             date: new Date(),
+            sport: sport
         });
 
         localStorage.setItem("clubs", JSON.stringify(currClubs));
@@ -107,7 +110,7 @@ export default function Searchbar() {
                     const inClub = checkIfInClub(club.club_id);
                     console.log(inClub); 
                     return (
-                        <div className="result" key={idx} onClick={async () => inClub ? navigate(`/clubs/${club.club_id}`) : await joinClub(club.club_id, club.club_name)}>
+                        <div className="result" key={idx} onClick={async () => inClub ? navigate(`/clubs/${club.club_id}`) : await joinClub(club.club_id, club.club_name, club.sport)}>
                             {SPORTS[club.sport]}
                             <h3>{club.club_name}</h3>
 

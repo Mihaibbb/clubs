@@ -8,49 +8,33 @@ import { useNavigate } from "react-router";
 export default function Account() {
 
   const containerRef = useRef();
-  const [emailIn, setEmailIn] = useState("");
-  const [passwordIn, setPasswordIn] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [usernameUp, setUsernameUp] = useState("");
-  const [emailUp, setEmailUp] = useState("");
-  const [passwordUp, setPasswordUp] = useState("");
-
-  const navigate = useNavigate();    
+ 
+  const [firstName, setFirstName] = useState(localStorage.getItem("first-name"));
+  const [lastName, setLastName] = useState(localStorage.getItem("last-name"));
+  const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [email, setEmail] = useState(localStorage.getItem("email"));
     
-  const signUpForm = async () => {
+  const updateAccount = async () => {
     const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: emailUp,
-        password: passwordUp,
-        firstName: firstName,
-        lastName: lastName,
-        username: usernameUp,
-        socket_id: "012032-4023"
-      })
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            email: email,
+            id: localStorage.getItem("id")
+        })
     };
 
-    const resJSON = await fetch("http://localhost:8080/signup", options);
-    const res = await resJSON.json();
-
-    if (res.error) {
-      return;
-    }
-
-    localStorage.setItem("id", await res.id);
-    localStorage.setItem("logged", true);
-    localStorage.setItem("email", emailUp);
+    await fetch("http://localhost:8080/update-account", options);
     localStorage.setItem("first-name", firstName);
     localStorage.setItem("last-name", lastName);
-    localStorage.setItem("username", usernameUp);
-    alert("User registered!");
-    navigate("/");
-   
-  };
+    localStorage.setItem("username", username);
+    localStorage.setItem("email", email);
+};
 
   return (
     <> 
@@ -86,18 +70,15 @@ export default function Account() {
 
             <div className="input-field">
               <i className="fas fa-user"></i>
-              <input type="text" placeholder="Username" value={usernameUp} onChange={e => setUsernameUp(e.target.value)}/>
+              <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)}/>
             </div>
 
             <div className="input-field">
               <i className="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" value={emailUp} onChange={e => setEmailUp(e.target.value)} />
+              <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
             </div>
 
-            <div className="input-field">
-              <i className="fas fa-lock"></i>
-              <input type="password" placeholder="Password" value={passwordUp} onChange={e => setPasswordUp(e.target.value)}/>
-            </div>
+            <input type="submit" value="Update account" className="solid btn" onClick={async () => await updateAccount()} />
           </div>
         </div>
         <div className="panel right-panel">
