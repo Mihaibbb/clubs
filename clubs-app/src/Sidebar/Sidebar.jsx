@@ -35,7 +35,7 @@ const NavIcon = styled(Link)`
   
 const SidebarNav = styled.nav`
   background: #15171C;
-  width: 250px;
+  width: 350px;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -49,6 +49,15 @@ const SidebarNav = styled.nav`
   
 const SidebarWrap = styled.div`
   width: 100%;
+`;
+
+const SidebarWrapper = styled.div`
+  
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  overflow: auto;
 `;
 
 const SPORTS = {
@@ -127,7 +136,7 @@ const Sidebar = () => {
           </NavIcon>
         </Nav>
         <SidebarNav sidebar={sidebar} >
-          <SidebarWrap>
+          <SidebarWrapper>
             <NavIcon to="#" onClick={showSidebar}>
               <FontAwesomeIcon icon={faTimes} className="icon" />
             </NavIcon>
@@ -142,7 +151,7 @@ const Sidebar = () => {
                 </div>
               );
             })}
-          </SidebarWrap>
+          </SidebarWrapper>
           <div
             className="icon add-container"
           >

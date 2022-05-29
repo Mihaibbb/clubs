@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <div className="home-container">
             <Header marginTop={4}/>
-                <Sidebar />
+            <Sidebar />
             {localStorage.getItem("logged") && <Searchbar />}
             <div className="banner">
                 <h2>Chat and play together with UniClub</h2>      
