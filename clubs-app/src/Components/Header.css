@@ -21,8 +21,11 @@
 
 .header .items a
 {
-    text-decoration: none;
-    color: initial;
+    list-style-type: none;
+    background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
 }
 
 .header .items .logo 

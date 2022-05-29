@@ -52,7 +52,7 @@ export default function Clubs() {
                             <span>Created by: </span> <b>{post.creator}</b>  
                         </div>
                         <h2>{post.title}</h2>
-                        <div className="content">
+                        <div className="content ">
                         <p>{post.content}</p>
                         </div>
                         

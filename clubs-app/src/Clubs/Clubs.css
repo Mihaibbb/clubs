@@ -1,11 +1,7 @@
 .title 
 {
     font-size: 65px;
-<<<<<<< HEAD
-    
-=======
     /* margin-top: -4rem; */
->>>>>>> 4b63cfd2684839c21afca10521431bca4c50d29d
     text-align: center;
     background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
     -webkit-background-clip: text;

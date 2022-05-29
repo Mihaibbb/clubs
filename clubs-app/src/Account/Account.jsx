@@ -1,61 +1,101 @@
-import Header from "../Components/Header";
-import noprofil from "../img/noprofil.png";
-import Sidebar from "../Sidebar/Sidebar";
+import noprofil from "../img/noprofil.png"
 import './Account.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBasketballBall, faCoffee, faSoccerBall, faTableTennis, faTableTennisPaddleBall, faUser, faVolleyball } from "@fortawesome/free-solid-svg-icons";
-
+import { useState, useRef } from "react";
+import Header from "../Components/Header";
+import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router";
 
 export default function Account() {
 
-    return (
-        <div className="account-container">
-             <Header marginTop={4}/>
-                <Sidebar />
-                <h1 className="title"><b>Account</b></h1>
-                <FontAwesomeIcon 
-                    icon={faUser}
-                    className="account-image"
-                />
-            <div className="card">
-                <div className="fundal">
-                    <div className="account-inputs">
-                        <div className="account-input">
-                            <label for="fname" >FirstName: </label>
-                            <input type="text" id="fname" name="fname" /><br></br>
-                        </div>
+  const containerRef = useRef();
+  const [emailIn, setEmailIn] = useState("");
+  const [passwordIn, setPasswordIn] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [usernameUp, setUsernameUp] = useState("");
+  const [emailUp, setEmailUp] = useState("");
+  const [passwordUp, setPasswordUp] = useState("");
 
-                        <div className="account-input">
-                            <label for="fname" >LastName: </label>
-                            <input type="text" id="lname" name="lname" /><br></br>
-                        </div>
+  const navigate = useNavigate();    
+    
+  const signUpForm = async () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: emailUp,
+        password: passwordUp,
+        firstName: firstName,
+        lastName: lastName,
+        username: usernameUp,
+        socket_id: "012032-4023"
+      })
+    };
 
-                        <div className="account-input">
-                            <label for="fname" >Username: </label>
-                            <input type="text" id="username" name="username" /><br></br>
-                        </div>
+    const resJSON = await fetch("http://localhost:8080/signup", options);
+    const res = await resJSON.json();
 
-                        <div className="account-input">
-                            <label for="fname" >Email: </label>
-                            <input type="text" id="email" name="email" /><br></br>
-                        </div>
-                    </div>
-                    
-                    
-                    
-                    <div id="outer">
-                        <div class="inner"><button type="submit" class="msgBtn" onClick="return false;"  > <FontAwesomeIcon icon={faSoccerBall}/> Football</button></div>
-                        <div class="inner"><button type="submit" class="msgBtn" onClick="return false;"> <FontAwesomeIcon icon={faBasketballBall} /> Basketball</button></div>
-                        <div class="inner"><button type="submit" class="msgBtn" onClick="return false;" > <FontAwesomeIcon icon={faVolleyball} /> Voleyball</button></div>
-                        <div class="inner"><button type="submit" class="msgBtn" onClick="return false;"> <FontAwesomeIcon icon={faTableTennisPaddleBall} /> Table-Tennis</button></div>
-                        {/* <div class="inner"><button type="submit" class="msgBtn" onClick="return false;" ><FontAwesomeIcon icon={faTennis} /> Tennis</button></div> */}
-                    </div>
+    if (res.error) {
+      return;
+    }
 
-                    <div class="inner"><button type="submit" class="msgBtn2" onClick="return false;" >Submit</button></div>
-                    
-                </div>
+    localStorage.setItem("id", await res.id);
+    localStorage.setItem("logged", true);
+    localStorage.setItem("email", emailUp);
+    localStorage.setItem("first-name", firstName);
+    localStorage.setItem("last-name", lastName);
+    localStorage.setItem("username", usernameUp);
+    alert("User registered!");
+    navigate("/");
+   
+  };
+
+  return (
+    <> 
+      <Header marginTop={0}/>
+      <Helmet>
+        <script
+          src="https://kit.fontawesome.com/64d58efce2.js"
+          crossorigin="anonymous"
+          async
+        ></script>
+      </Helmet>
+      <div className="container sign-up-mode" ref={containerRef}>
+      <div className="forms-container">
+        <div className="signin-signup">
+          <div className="form sign-up-form">
+          <div className="poza"> <img src={noprofil} /> </div>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="First Name" value={firstName} onChange={e => setFirstName(e.target.value)} />
             </div>
+
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Username" value={usernameUp} onChange={e => setUsernameUp(e.target.value)}/>
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-envelope"></i>
+              <input type="email" placeholder="Email" value={emailUp} onChange={e => setEmailUp(e.target.value)} />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input type="password" placeholder="Password" value={passwordUp} onChange={e => setPasswordUp(e.target.value)}/>
+            </div>
+          </div>
         </div>
-        
-    );
-}
+      </div>
+    </div>
+    </>
+  );
+};
+

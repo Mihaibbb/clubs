@@ -9,12 +9,13 @@ export default function Header({marginTop}) {
         window.location.reload();
     };
 
+    
     return (
         <div className="header" style={{marginTop: `${marginTop}px`}}>
             <div className="items">
                 <div className="left-container">
-                    <li>Why UniClub?</li>
-                    <li>How it works?</li>
+                    <a href="#whyus">Why us?</a>
+                    <a href="#howworks">How it works?</a>
                 </div>
                 
                 <div className="logo">
@@ -36,7 +37,7 @@ export default function Header({marginTop}) {
                     ) : (
                         <Link to="/signin">
                             <li>
-                                Sign up
+                                Sign in
                             </li>
                             <li></li>
                         </Link>
