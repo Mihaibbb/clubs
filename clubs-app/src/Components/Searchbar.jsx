@@ -105,7 +105,7 @@ export default function Searchbar() {
     return (
         <div className="search-bar">
             <input className="search-input" placeholder="Search clubs..." value={club} onChange={async e => await changeText(e)} />
-            <div className="results" style={{backgroundColor: searchedClubs.length !== 0 ? "rgba(41, 33, 45, .9)" : "transparent"}}>
+            <div className="results" style={{backgroundColor: searchedClubs.length !== 0 ? "rgba(41, 33, 45, .9)" : "transparent", borderRadius: searchedClubs.length !== 0 ? "16px" : "40px"}}>
                 {searchedClubs.map((club, idx) => {
                     const inClub = checkIfInClub(club.club_id);
                     console.log(inClub); 
