@@ -19,7 +19,7 @@ export default function Footer() {
                 
                 <div className="logo">
                     <Link to="/">
-                        <h4>Designed by: <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">UniClub.com</a></h4>
+                        <h4>Designed by: </h4>
                     </Link>
                     <img src={logo} width={50}/>
                 </div>

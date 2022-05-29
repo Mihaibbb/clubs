@@ -59,9 +59,10 @@
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(white,var(--lightest-green),var(--light-green),  var(--dark-green),black);
+  border-radius: 14px;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: var(--lightest-green); 
-}
+/* ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(black,var(--lightest-green),var(--light-green),  var(--dark-green), white);
+} */

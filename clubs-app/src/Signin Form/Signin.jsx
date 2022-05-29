@@ -3,7 +3,7 @@ import './Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
 
@@ -71,6 +71,7 @@ export default function Signin() {
     const res = await resJSON.json();
 
     if (res.error) {
+      console.log(res.error);
       return;
     }
 

@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 const database = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password'
+    password: 'password1'
 });
 
 database.connect(err => {
@@ -155,12 +155,14 @@ app.post('/create-club', (req, res) => {
                         sql += "id int primary key auto_increment not null, ";
                         sql += "club_id varchar(128) not null, ";
                         sql += "club_name varchar(128) not null, ";
-                        sql += "owner varchar(256) not null ); ";
+                        sql += "owner varchar(256) not null, ";
+                        sql += "sport varchar(256) not null, ";
+                        sql += "people int not null );";
                         database.query(sql, ["uniclubs"], (err6, result) => {
                             if (err6) throw err6;
                             
-                            sql = "INSERT INTO ?? (club_id, club_name, owner) VALUES (?, ?, ?)";
-                            database.query(sql, ["uniclubs", req.body.clubId, req.body.clubName, req.body.username], (err7, result) => {
+                            sql = "INSERT INTO ?? (club_id, club_name, owner, sport, people) VALUES (?, ?, ?, ?, ?)";
+                            database.query(sql, ["uniclubs", req.body.clubId, req.body.clubName, req.body.username, req.body.sport, 1], (err7, result) => {
                                 if (err7) throw err;
                                 console.log("here 2 22");
                                 res.json({ status: true });
@@ -199,12 +201,29 @@ app.post('/join-club', (req, res) => {
 
         database.query(sql, ["users", JSON.stringify(newClubs), req.body.id], (err2, result) => {
             if (err2) throw err;
-
-            sql = "INSERT INTO ?? (email, username, posts, comments) VALUES (?, ?, ?, ?) ";
-            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.useranme, JSON.stringify([]), JSON.stringify([])], (err3, inserted) => {
+            
+            sql = "INSERT INTO ?? (email, username, posts, comments) VALUES (?, ?, ?, ?); ";
+            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.username, JSON.stringify([]), JSON.stringify([])], (err3, inserted) => {
+               
                 if (err3) throw err;
-                
-                // Join club users
+               
+                sql = "SELECT * FROM ?? WHERE club_id = ?";
+                database.query(sql, ["uniclubs", req.body.clubId], (err3, rows) => {
+                    if (err3) throw err;
+                    
+                    if (rows.length !== 1) {
+                        console.log('here');
+                        res.json({error: "User not found"});
+                        return;
+                    }
+                    const people = rows[0]["people"] + 1;
+                    sql = "UPDATE ?? SET people = ? WHERE club_id = ?";
+                    database.query(sql, ["uniclubs", people, req.body.clubId], (err4, newResult) => {
+                        if (err4) throw err4;
+                        console.log(newResult);
+                        res.json({joined: true});
+                    });
+                })
             });
         });
     });
@@ -303,6 +322,16 @@ app.post("/search-club", (req, res) => {
     database.query(sql, ["uniclubs", req.body.name], (err, rows) => {
         if (err) throw err;
         res.json(rows);
+    });
+});
+
+app.post("/check-club", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", req.body.id], (err, rows) => {
+        if (err) throw err;
+        const data = JSON.parse(rows[0]["clubs"]).find(club => club.id === req.body.clubId);
+        if (data) res.json({check: true});
+        else res.json({check: false});
     });
 });
 
