@@ -95,7 +95,7 @@ const Sidebar = () => {
       setMembers(currMembers => {
         console.log(currMembers);
         return [...currMembers, res.people];
-    });
+      });
       
   };
 
@@ -116,13 +116,19 @@ const Sidebar = () => {
       const resJSON = await fetch("http://localhost:8080/get-clubs", options);
       const clubs = await resJSON.json();
       console.log("CLUUUUBS", clubs, clubs.clubs);
-     
-      setPersonalClubs(await clubs.clubs);
-      clubs.clubs.forEach(async club => {
-      console.log("ok ok")
-      await getMembers(club.id);
-      localStorage.setItem("clubs", JSON.stringify(clubs.clubs));
-    });
+      const currClubs = [];
+      const realClubs = clubs.clubs.filter(club => {
+        const found = currClubs.some(currClub => currClub === club.id);
+        currClubs.push(club.id);
+        return !found;
+      });
+      
+      setPersonalClubs(realClubs);
+      realClubs.forEach(async club => {
+        console.log("ok ok")
+        await getMembers(club.id);
+        localStorage.setItem("clubs", JSON.stringify(clubs.clubs));
+      });
     })();
   }, []);
 

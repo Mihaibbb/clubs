@@ -20,6 +20,10 @@ export default function Signin() {
   const navigate = useNavigate();
 
   const signInForm = async () => {
+    if (emailIn.search("@") === -1 || emailIn.search(".") === -1) {
+      setError("Email has not a valid form.")
+      return;
+    }
     if (emailIn.length < 4 || passwordIn.length < 8) {
       setError("Email or password is too short");
       return;
@@ -57,6 +61,10 @@ export default function Signin() {
   };
 
   const signUpForm = async () => {
+    if (emailUp.search("@") === -1 || emailUp.search(".") === -1) {
+      setError("Email has not a valid form.")
+      return;
+    }
     if (emailUp.length < 4 || passwordUp.length < 8) {
       setError("Email or password is too short");
       return;

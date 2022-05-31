@@ -66,9 +66,10 @@ export default function Searchbar() {
         const resJSON = await fetch("http://localhost:8080/join-club", options);
         const res = await resJSON.json();
         console.log(await res);
-        const currClubs = JSON.parse(localStorage.getItem("clubs"));
+        const currClubs = JSON.parse(localStorage.getItem("clubs")) || [];
         currClubs.push({
-            id: clubId,
+            id: localStorage.getItem("id"),
+            clubId: clubId,
             name: clubName,
             owner: false,
             date: new Date(),
