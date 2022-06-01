@@ -6,12 +6,12 @@ import Footer from "./Footer";
 import Searchbar from "./Searchbar";
 import { Link } from "react-router-dom";
 
-export default function Home() {
+export default function Home({socket, socketId}) {
     return (
         <div className="home-container">
             <Header marginTop={4}/>
-                <Sidebar />
-            {localStorage.getItem("logged") && <Searchbar />}
+                <Sidebar socket={socket} socketId={socketId} />
+            {localStorage.getItem("logged") && <Searchbar socket={socket} socketId={socketId}/>}
             <div className="banner">
                 <h2>Chat and play together with UniClub</h2>      
             </div>

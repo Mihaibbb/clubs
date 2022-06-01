@@ -72,12 +72,13 @@ const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
   const [personalClubs, setPersonalClubs] = useState(null);
   const [members, setMembers] = useState([]);
+  let started = false;
   const showSidebar = () => setSidebar(!sidebar);
   const navigate = useNavigate();
 
   
   const getMembers = async (clubId) => {
-    console.log('here');
+    console.log(clubId);
       const options = {
           method: 'POST',
           headers: {
@@ -88,21 +89,32 @@ const Sidebar = () => {
           })
       };
 
-      const resJSON = await fetch("http://localhost:8080/people-in-club", options);
-      const res = await resJSON.json();
-      console.log(await res.people);
-      
-      setMembers(currMembers => {
-        console.log(currMembers);
-        return [...currMembers, res.people];
-      });
-      
+      try {
+
+        const resJSON = await fetch("http://localhost:8080/people-in-club", options);
+        const res = await resJSON.json();
+        console.log(await res.people, await res.id);
+        console.log(res, res.people, members);
+        if (!res || !res.people) return;
+          
+        setMembers(currMembers => {
+          console.log(currMembers);
+          
+          return [...currMembers, {people: res.people, id: res.id}];
+        });
+      } catch(e) {
+        console.log(e);
+      }
+
+    
+    
+
   };
 
   useEffect(() => {
     (async () => {
-      if (!localStorage.getItem("logged")) return;
-
+      if (!localStorage.getItem("logged") || started) return;
+      started = true;
       const options = {
         method: 'POST',
         headers: {
@@ -124,16 +136,25 @@ const Sidebar = () => {
       });
       
       setPersonalClubs(realClubs);
+      console.log(realClubs);
       realClubs.forEach(async club => {
-        console.log("ok ok")
+        console.log("club here");
+        console.log(club)
         await getMembers(club.id);
-        localStorage.setItem("clubs", JSON.stringify(clubs.clubs));
+        
       });
+
+      localStorage.setItem("clubs", JSON.stringify(realClubs));
     })();
   }, []);
 
+  useEffect(() => {
+    const newMembers = members && members.filter((member, idx) => members.indexOf(member) === idx);
+    console.log(newMembers, members);
+  }, [members]);
+
   
-  return personalClubs && (
+  return personalClubs && members &&  (
     <>
       <div>
         <Nav>
@@ -153,7 +174,7 @@ const Sidebar = () => {
                     {SPORTS[item.sport]}
                   </div>
                   <h3>{item.name}</h3>
-                  <h4>{members[index]}</h4>
+                  <h4>{members[index]?.people}</h4>
                 </div>
               );
             })}

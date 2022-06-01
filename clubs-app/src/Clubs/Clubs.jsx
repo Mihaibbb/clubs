@@ -6,65 +6,82 @@ import Header from "../Components/Header";
 import Sidebar from "../Sidebar/Sidebar";
 import "./Clubs.css";
 
-export default function Clubs() {
+export default function Clubs({ socket }) {
     
     const params = useParams();
     const navigate = useNavigate();
     const clubId = params.id;
-    const clubName = localStorage.getItem("clubs") && JSON.parse(localStorage.getItem("clubs")).find(club => club.id === clubId).name;
-    console.log(params.id);
-
+    const club = localStorage.getItem("clubs") && JSON.parse(localStorage.getItem("clubs")).find(club => club.id === clubId);
+    console.log(JSON.parse(localStorage.getItem("clubs")));
+    const clubName = club?.name;
     const [posts, setPosts] = useState(null);
     const [comments, setComments] = useState(null);
     const commentsRef = useRef();
 
     if (params.id.length !== 8 || !localStorage.getItem("logged")) navigate("/");
 
+    const getFeed = async () => {
+        let options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                clubId: clubId
+            })
+        };
+
+        let resJSON = await fetch("http://localhost:8080/get-posts", options);
+        let rows = await resJSON.json();
+        setPosts(rows);
+
+        options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                clubId: clubId,
+            })
+        };
+
+        resJSON = await fetch("http://localhost:8080/get-comments", options);
+        const res = await resJSON.json();
+        const elements = await res.comments;
+        setComments(elements);
+    };  
+
     useEffect(() => {
         (async () => {
-            let options = {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    clubId: clubId
-                })
-            };
-
-            let resJSON = await fetch("http://localhost:8080/get-posts", options);
-            let rows = await resJSON.json();
-            setPosts(rows);
-
-            options = {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    clubId: clubId,
-                })
-            };
-
-            resJSON = await fetch("http://localhost:8080/get-comments", options);
-            const res = await resJSON.json();
-            const elements = await res.comments;
-            setComments(elements);
+            await getFeed();
         })();
+    }, []);
+
+    // Update feed
+    useEffect(() => {
+        socket.on("new_feed", async () => {
+            console.log('new feed');
+            await getFeed();
+        });
     }, []);
 
     useEffect(() => {
         console.log(comments);
     }, [comments])
 
-    return clubName && (
+    if (!clubName) {
+        console.log(clubName);
+        // navigate("/");
+    }
+
+    return (
         <div>
             <Header />
             <div className="page-desc">
                 <Sidebar />
             </div> 
 
-            <h2 className="title">{clubName} Club</h2>
+            <h2 className="title">{clubName}</h2>
 
             <div className="posts">
                 {posts && posts.map((post, idx) => (
@@ -87,8 +104,8 @@ export default function Clubs() {
                         
                     </div>
 
-                    <div className="comments"ref={commentsRef}>
-                        {comments && comments[idx].map((comment, commentIdx) => (
+                    <div className="comments" ref={commentsRef}>
+                        {comments && comments[idx] && comments[idx].map((comment, commentIdx) => (
                             <div className="comment" key={commentIdx}>
                                 <div className="creator">
                                     <p>{comment.from}</p>

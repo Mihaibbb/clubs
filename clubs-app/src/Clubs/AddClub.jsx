@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 
-export default function AddClub() {
+export default function AddClub({ socket }) {
 
     const [clubName, setClubName] = useState("");
     const [sport, setSport] = useState('football');
@@ -45,7 +45,8 @@ export default function AddClub() {
                 id: localStorage.getItem("id"),
                 sport: sport,
                 clubId: clubId,
-                clubName: clubName
+                clubName: clubName,
+                socketId: socket.id
             })
         };
 
@@ -55,6 +56,8 @@ export default function AddClub() {
             setError(res.error);
             return;
         }
+        
+
 
         navigate("/");
     };

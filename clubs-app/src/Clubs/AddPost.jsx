@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 
-export default function AddPost() {
+export default function AddPost({ socket }) {
 
     const [postName, setPostName] = useState("");
     const [postContent, setPostContent] = useState("");
@@ -52,7 +52,7 @@ export default function AddPost() {
             alert("ERROR!");
             return;
         }
-
+        socket.emit("update_feed", clubId, localStorage.getItem("email"));
         navigate(-1);
     };
 

@@ -1,10 +1,15 @@
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const io = require('socket.io');
+const io = require('socket.io')(server, {
+    cors: {
+        origin: ["http://localhost:3000"]
+    }
+});
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -139,6 +144,7 @@ app.post('/create-club', (req, res) => {
                 sql += 'id int(11) auto_increment primary key not null, ';
                 sql += 'email varchar(256) not null, ';
                 sql += 'username varchar(256) not null, ';
+                sql += 'socket_id varchar(256) not null, ';
                 sql += 'posts json not null, ';
                 sql += 'comments json not null, ';
                 sql += 'sports varchar(128) );';
@@ -146,8 +152,8 @@ app.post('/create-club', (req, res) => {
                 database.query(sql, [`${req.body.clubId}_users`], (err4, result) => {
                     if (err4) throw err4;
                     
-                    sql = 'INSERT INTO ?? (email, username, posts, comments, sports) VALUES (?, ?, ?, ?, ?)';
-                    const placeholders = [`${req.body.clubId}_users`, req.body.email, req.body.username, JSON.stringify([]), JSON.stringify([]), req.body.sport];
+                    sql = 'INSERT INTO ?? (email, username, socket_id, posts, comments, sports) VALUES (?, ?, ?, ?, ?, ?)';
+                    const placeholders = [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([]), JSON.stringify([]), req.body.sport];
                     database.query(sql, placeholders, (err5, result) => {
                         
                         if (err5) throw err5;
@@ -202,8 +208,8 @@ app.post('/join-club', (req, res) => {
         database.query(sql, ["users", JSON.stringify(newClubs), req.body.id], (err2, result) => {
             if (err2) throw err;
             
-            sql = "INSERT INTO ?? (email, username, posts, comments) VALUES (?, ?, ?, ?); ";
-            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.username, JSON.stringify([]), JSON.stringify([])], (err3, inserted) => {
+            sql = "INSERT INTO ?? (email, username, socket_id, posts, comments) VALUES (?, ?, ?, ?, ?); ";
+            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([]), JSON.stringify([])], (err3, inserted) => {
                
                 if (err3) throw err;
                
@@ -352,7 +358,9 @@ app.post("/people-in-club", (req, res) => {
     sql = "SELECT * FROM ?? WHERE club_id = ?";
     database.query(sql, ["uniclubs", req.body.clubId], (err, rows) => {
         if (err) throw err;
-        res.json({people: rows[0]["people"]});
+        if (!rows) return;
+        if (!rows[0]) return;
+        res.json({people: rows[0]["people"], id: rows[0]["club_id"]});
     });
 });
 
@@ -362,8 +370,45 @@ app.post("/update-account", (req, res) => {
         if (err) throw err;
         console.log(result);
     });
+});
+
+io.on("connection", socket => {
+    console.log("Connected!");
+
+    socket.on("update_feed", (clubId, email) => {
+
+        sql = "SELECT * FROM ?? WHERE email != ?";
+        database.query(sql, [`${clubId}_users`, email], (err, rows) => {
+            if (err) throw err;
+            rows.forEach(row => {
+                console.log(row);
+                socket.to(row["socket_id"]).emit("new_feed");
+            })
+        });
+    });
+
+    socket.on("update_socket", (email) => {
+        sql = "SELECT * FROM ?? WHERE email = ?";
+        database.query(sql, ["users", email], (err, rows) => {
+            if (err) throw err;
+            if (rows.length !== 1) return;
+            const row = rows[0];
+            const clubs = JSON.parse(row["clubs"]);
+            console.log(clubs);
+            clubs && clubs.forEach(club => {
+                console.log("here x", club);
+                sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
+                database.query(sql, [`${club.id}_users`, socket.id, email], (err2, result) => {
+                    if (err2) throw err2;
+                    console.log(result);
+                });
+            });
+        });
+    });
+
+    socket.on("disconnect", () => console.log("Disconnect"));
 
 });
 
 
-app.listen(8080, () => console.log('Server listen on 8080!'));
+server.listen(8080, () => console.log('Server listen on 8080!'));

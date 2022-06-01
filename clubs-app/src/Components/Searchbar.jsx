@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import "./Searchbar.css";
 import { faSoccerBall, faBasketball, faVolleyball, faPingPongPaddleBall, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
-export default function Searchbar() {
+export default function Searchbar({ socket, socketId }) {
     const SPORTS = {
         football: <FontAwesomeIcon icon={faSoccerBall} />,
         basketball: <FontAwesomeIcon icon={faBasketball} />,
@@ -59,7 +59,8 @@ export default function Searchbar() {
                 username: localStorage.getItem("username"),
                 clubId: clubId, 
                 clubName: clubName,
-                sport: sport
+                sport: sport,
+                socketId: socketId
             })
         };
 
@@ -73,11 +74,16 @@ export default function Searchbar() {
             name: clubName,
             owner: false,
             date: new Date(),
-            sport: sport
+            sport: sport,
+            socketId: socket.id
         });
 
         localStorage.setItem("clubs", JSON.stringify(currClubs));
-        if (res.joined) navigate(`/clubs/${clubId}`);
+        
+        if (res.joined) {
+
+            navigate(`/clubs/${clubId}`);
+        }
     };  
 
     useEffect(() => {
