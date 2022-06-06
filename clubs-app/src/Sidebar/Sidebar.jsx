@@ -158,7 +158,7 @@ const Sidebar = () => {
     <>
       <div>
         <Nav>
-          <NavIcon to="#"  onClick={showSidebar}>
+          <NavIcon to="#" onClick={showSidebar}>
             <FontAwesomeIcon icon={faBars} className="icon" />
           </NavIcon>
         </Nav>
@@ -167,22 +167,24 @@ const Sidebar = () => {
             <NavIcon to="#" onClick={showSidebar}>
               <FontAwesomeIcon icon={faTimes} className="icon" />
             </NavIcon>
-            {personalClubs.map((item, index) => {
-              return (
-                <div className="group-container" key={index} onClick={() => navigate(`/clubs/${item.id}`)}>
-                  <div className="icon">
-                    {SPORTS[item.sport]}
+            <div className="sidebar-groups">
+              {personalClubs.map((item, index) => {
+                return (
+                  <div className="group-container" key={index} onClick={() => navigate(`/clubs/${item.id}`)}>
+                    <div className="icon">
+                      {SPORTS[item.sport]}
+                    </div>
+                    <h3>{item.name}</h3>
+                    <h4>{members[index]?.people}</h4>
                   </div>
-                  <h3>{item.name}</h3>
-                  <h4>{members[index]?.people}</h4>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </SidebarWrapper>
           <div
             className="icon add-container"
           >
-            <h2 onClick={() => navigate("/add-club")}>Create Group</h2>
+            <h2 onClick={() => navigate("/add-club")}>Create Club</h2>
           </div>
         </SidebarNav>
 

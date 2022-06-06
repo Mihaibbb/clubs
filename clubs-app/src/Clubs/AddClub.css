@@ -32,3 +32,13 @@
     color: #fff;
 }
 
+.privacy 
+{
+    width: 100%;
+    max-width: 380px;
+}
+
+.btn.solid 
+{
+    margin-top: 2rem;
+}

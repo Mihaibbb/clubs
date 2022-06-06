@@ -7,12 +7,14 @@ import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
+import "./Switch.css";
 
 export default function AddClub({ socket }) {
 
     const [clubName, setClubName] = useState("");
     const [sport, setSport] = useState('football');
     const [error, setError] = useState('');
+    const [checked, setChecked] = useState(false);
     const containerRef = useRef();
     const sportsRef = useRef();
     const navigate = useNavigate();
@@ -57,8 +59,6 @@ export default function AddClub({ socket }) {
             return;
         }
         
-
-
         navigate("/");
     };
 
@@ -135,6 +135,13 @@ export default function AddClub({ socket }) {
                                 <h3>Ping Pong</h3>
                                 
                             </div>
+                        </div>
+
+                        <div className="privacy">
+                        <label className="switch">
+                            <input type="checkbox" className="checkbox" checked={checked} onChange={() => setChecked(check => !check)} />
+                            <span className="slider round">{checked ? "Private" : "Public"}</span>
+                        </label>
                         </div>
                         
                         <input value="Create Club" className="btn solid" onClick={async () => await createClub()} readOnly/>

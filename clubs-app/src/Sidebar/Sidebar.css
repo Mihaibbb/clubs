@@ -1,3 +1,9 @@
+.sidebar-groups
+{
+    width: 100%;
+    padding: 1rem;
+}
+
 .icon{
     color: white;
 }
@@ -28,9 +34,21 @@
     gap: 1rem;
     color: #fff;
     cursor: pointer;
+    border-bottom: 2px solid var(--darkest-green);
 }
 
-.group-container .fa-users
+.group-container h3 
 {
-    color: var(--dark-green);
+    font-size: 22px;
+}
+
+.group-container h4 
+{
+    font-size: 22px;
+}
+
+.group-container .icon
+{
+    color: var(--lightest-green);
+    font-size: 22px;
 }

@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const { restart } = require('nodemon');
 const io = require('socket.io')(server, {
     cors: {
         origin: ["http://localhost:3000"]
@@ -146,7 +147,6 @@ app.post('/create-club', (req, res) => {
                 sql += 'username varchar(256) not null, ';
                 sql += 'socket_id varchar(256) not null, ';
                 sql += 'posts json not null, ';
-                sql += 'comments json not null, ';
                 sql += 'sports varchar(128) );';
 
                 database.query(sql, [`${req.body.clubId}_users`], (err4, result) => {
@@ -372,6 +372,83 @@ app.post("/update-account", (req, res) => {
     });
 });
 
+app.post("/check-admin", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", req.body.id], (err, rows) => {
+        if (err) throw err;
+        if (rows.length !== 1) res.json({error: "User not found!"});
+        const clubs = JSON.parse(rows[0]["clubs"]);
+        if (clubs.length === 0) res.json({ admin: false });
+        const currClub = clubs.find(club => club.id === req.body.clubId);
+        res.json({ admin: currClub.owner });
+    });
+});
+
+app.post("/delete-club", (req, res) => {
+    sql = "DROP TABLE ??";
+    database.query(sql, [`${req.body.clubId}_posts`], (err, result) => {
+        if (err) throw err;
+        sql = "SELECT * FROM ??";
+        database.query(sql, [`${req.body.clubId}_users`], (err2, rows) => {
+            if (err2) throw err2;
+            rows.forEach(row => {
+                const email = row.email;
+                sql = "SELECT * FROM ?? WHERE email = ?";
+                database.query(sql, ["users", email], (err3, userRows) => {
+                    if (err3) throw err3;
+                    if (userRows.length !== 1) res.json({error: "User not found"});
+                    const clubs = JSON.parse(userRows[0]["clubs"]);
+                    const newClubs = clubs.filter(club => club.id !== req.body.clubId);
+                    sql = "UPDATE ?? SET clubs = ? WHERE email = ?";
+                    database.query(sql, ["users", newClubs, email], (err4, result) => {
+                        if (err4) throw err4;
+                    });
+                });
+            });
+
+            sql = "DROP TABLE ??";
+            database.query(sql, [`${req.body.clubId}_users`], (finErr) => {
+                if (finErr) throw finErr;
+                res.json({deleted: true});
+            });
+        });
+    });
+});
+
+app.post("/delete-post", (req, res) => {
+    sql = "DELETE FROM ?? WHERE id = ?";
+    console.log(req.body.postIdx, req.body.clubId);
+    database.query(sql, [`${req.body.clubId}_posts`, req.body.postIdx], (err, result) => {
+        if (err) throw err;
+        res.json({deleted: true});
+    });
+});
+
+app.post("/delete-comment", (req, res) => {
+
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, [`${req.body.clubId}_posts`, req.body.postIdx], (err, rows) => {
+        if (err) throw err;
+        if (rows.length !== 1) res.json({error: "Post not found"});
+        const comments = JSON.parse(rows[0]["comments"]);
+        const newComments = comments.filter((comment, commentIdx) => commentIdx !== req.body.commentIdx);
+        sql = "UPDATE ?? SET comments = ? WHERE id = ?";
+        database.query(sql, [`${req.body.clubId}_posts`, JSON.stringify(newComments), req.body.postIdx], (err2, result) => {
+            if (err2) throw err2;
+        });
+    });
+});
+
+app.post("/group-users", (req, res) => {
+    sql = "SELECT * FROM ??;";
+    database.query(sql, [`${req.body.clubId}_users`], (err, rows) => {
+        if (err) throw err;
+        if (rows.length === 0) res.json({error: "Group users not found!"});
+        res.json({users: rows});
+    });
+});
+
+
 io.on("connection", socket => {
     console.log("Connected!");
 
@@ -400,7 +477,12 @@ io.on("connection", socket => {
                 sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
                 database.query(sql, [`${club.id}_users`, socket.id, email], (err2, result) => {
                     if (err2) throw err2;
-                    console.log(result);
+                    sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
+                    database.query(sql, [`${club.id}_users`, socket.id, email], (err3, result) => {
+                        if (err3) throw err3;
+                        console.log(result);
+                    });
+                    
                 });
             });
         });

@@ -10,7 +10,7 @@ import {
 import Home from './Components/Home';
 import ContactUs from './Components/ContactUs';
 import Signin from './Signin Form/Signin';
-import Clubs from './Clubs/Clubs';
+import Club from './Clubs/Club';
 import AddClub from './Clubs/AddClub';
 import Account from './Account/Account';
 import Footer from './Components/Footer';
@@ -18,6 +18,7 @@ import AddPost from './Clubs/AddPost';
 import AddComment from './Clubs/AddComment';
 
 import { io } from "socket.io-client";
+import Clubs from './Clubs/Clubs';
 
 function App() {
   const [realSocket, setRealSocket] = useState(null);
@@ -47,7 +48,8 @@ function App() {
             <Route path={'/add-club'} element={<AddClub socket={realSocket} socketId={socketId} />} />
             <Route path={'/add-post'} element={<AddPost socket={realSocket} socketId={socketId} />} />
             <Route path={'/add-comment'} element={<AddComment socket={realSocket} socketId={socketId} />} />
-            <Route path={'/clubs/:id'} element={<Clubs socket={realSocket} socketId={socketId} />} />
+            <Route path={'/clubs'} element={<Clubs socket={realSocket} socketId={socketId} />} />
+            <Route path={'/clubs/:id'} element={<Club socket={realSocket} socketId={socketId} />} />
             <Route path={'/account'} element={<Account socket={realSocket} socketId={socketId} />} />
             <Route path={'/'} element={<Home socket={realSocket} socketId={socketId} />} />
           </Routes>

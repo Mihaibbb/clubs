@@ -30,7 +30,7 @@ export default function AddComment({ socket }) {
                 content: postContent,
                 username: localStorage.getItem("username"),
                 clubId: clubId,
-                postId: postIdx + 1,
+                postId: postIdx,
                 email: localStorage.getItem("email")
             })
         };

@@ -29,7 +29,7 @@ export default function AddPost({ socket }) {
         return result;
     };
     
-    const createClub = async () => {
+    const createPost = async () => {
         if (postName.length < 4) return;
         
         console.log(clubId);
@@ -88,12 +88,9 @@ export default function AddPost({ socket }) {
                             placeholder="Content..."
                             value={postContent}
                             onChange={e => setPostContent(e.target.value)}
-                        >
-
-                        </textarea>
-                        
+                        ></textarea>
             
-                        <input value="Create Post" className="btn solid" onClick={async () => await createClub()} readOnly/>
+                        <input value="Create Post" className="btn solid" onClick={async () => await createPost()} readOnly/>
                         
                     </div>
                     </div>

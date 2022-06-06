@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../img/logo.png";
 import './Header.css';
 
@@ -9,13 +9,22 @@ export default function Header({marginTop}) {
         window.location.reload();
     };
 
+    const location = useLocation();
+
     
     return (
         <div className="header" style={{marginTop: `${marginTop}px`}}>
             <div className="items">
                 <div className="left-container">
-                    <a href="#whyus">Why us?</a>
-                    <a href="#howworks">How it works?</a>
+                    {location.pathname === "/" ? (
+                        <>
+                            <a href="#whyus">Why us?</a>
+                            <a href="#howworks">How it works?</a>
+                        </>
+                    ) : null}
+                    <Link to="/clubs">
+                        <li>Clubs</li>
+                    </Link>
                 </div>
                 
                 <div className="logo">

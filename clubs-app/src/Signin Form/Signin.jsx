@@ -5,7 +5,7 @@ import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 
-export default function Signin() {
+export default function Signin({socket, socketId}) {
 
   const containerRef = useRef();
   const [emailIn, setEmailIn] = useState("");
@@ -80,7 +80,7 @@ export default function Signin() {
         firstName: firstName,
         lastName: lastName,
         username: usernameUp,
-        socket_id: "012032-4023"
+        socket_id: socketId
       })
     };
 
