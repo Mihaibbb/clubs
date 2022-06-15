@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import { SidebarData } from "./SidebarData";
-import SubMenu from "./SubMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faBasketball, faPingPongPaddleBall, faPlus, faSoccerBall, faTimes, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
+import SPORTS from "../Sports/Sports";
 import "./Sidebar.css";
 
 const Nav = styled.div`
@@ -60,14 +57,9 @@ const SidebarWrapper = styled.div`
   overflow: auto;
 `;
 
-const SPORTS = {
-  football: <FontAwesomeIcon icon={faSoccerBall} />,
-  basketball: <FontAwesomeIcon icon={faBasketball} />,
-  volley: <FontAwesomeIcon icon={faVolleyball} />,
-  ping_pong: <FontAwesomeIcon icon={faPingPongPaddleBall} />
-};
+
   
-const Sidebar = () => {
+const Sidebar = (socketId) => {
   
   const [sidebar, setSidebar] = useState(false);
   const [personalClubs, setPersonalClubs] = useState(null);
@@ -105,9 +97,6 @@ const Sidebar = () => {
       } catch(e) {
         console.log(e);
       }
-
-    
-    
 
   };
 
@@ -184,7 +173,7 @@ const Sidebar = () => {
           <div
             className="icon add-container"
           >
-            <h2 onClick={() => navigate("/add-club")}>Create Club</h2>
+            <h2 onClick={() => navigate("/add-club", { state: { socketId: socketId } })}>Create Club</h2>
           </div>
         </SidebarNav>
 

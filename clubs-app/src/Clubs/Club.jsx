@@ -1,5 +1,5 @@
 import { createRef } from "react";
-import { faAngleDown, faPencil, faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faPencil, faPlus, faTimes, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -8,7 +8,7 @@ import Header from "../Components/Header";
 import Sidebar from "../Sidebar/Sidebar";
 import "./Club.css";
 
-export default function Club({ socket }) {
+export default function Club({ socket, socketId }) {
     
     const params = useParams();
 
@@ -104,6 +104,19 @@ export default function Club({ socket }) {
 
     };
 
+    const getRemainingPosts = () => {
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+
+            })
+        };
+    };
+
+
     const deletePost = async (postId) => {
        
         const options = {
@@ -124,7 +137,7 @@ export default function Club({ socket }) {
         window.location.reload(); 
     };
 
-    const deleteComment = async (postsNumber, postIdx, commentIdx) => {
+    const deleteComment = async (postIdx, commentIdx) => {
         const options = {
             method: 'POST',
             headers: {
@@ -132,12 +145,15 @@ export default function Club({ socket }) {
             },
             body: JSON.stringify({
                 clubId: clubId,
-                postIdx: postsNumber - postIdx,
+                postIdx: postIdx,
                 commentIdx: commentIdx
             })
         };
 
-        await fetch("http://localhost:8080/delete-comment", options);
+        const resJSON = await fetch("http://localhost:8080/delete-comment", options);
+        const res = await resJSON.json();
+        if (res.deleted) window.location.reload();
+       
     };
 
     useEffect(() => {
@@ -169,14 +185,22 @@ export default function Club({ socket }) {
     if (!clubName) navigate("/");
 
 
-    return admin !== null && (
+    return admin !== null && groupUsers && (
         <div>
             <Header />
+          
             <div className="page-desc">
-                <Sidebar />
+                <Sidebar socketId={socketId} />
             </div> 
 
-            <h2 className="title">{clubName}</h2>
+            
+            <div className="club-banner">
+                <h2 className="title">{clubName}</h2>
+                <div className="club-people">
+                    <FontAwesomeIcon icon={groupUsers.length === 1 ? faUser : faUsers} />
+                    <h3>{groupUsers.length}</h3>
+                </div>
+            </div>
 
             <div className="posts-total">
 
@@ -227,16 +251,21 @@ export default function Club({ socket }) {
                             { comments && comments[idx] && comments[idx].map((comment, commentIdx) => (
                                 <div className="comment" key={commentIdx}>
                                     <div className="creator">
-                                        <p>{comment.from}</p>
+                                        <p>Created by: {comment.from}</p>
                                     </div>
                                     <h2>{comment.content}</h2>
+                                    {admin && 
+                                        <div className="delete-comment" onClick={async () => await deleteComment(post.id, commentIdx)}>
+                                            <FontAwesomeIcon icon={faTimes} />
+                                        </div>
+                                    }
                                 </div>
                             ))}
                         </div>
                     
                         </div>
                     ))}
-                    {posts && <div className="show-more">
+                    {posts && posts.length > 0 && <div className="show-more">
                         <h3>Show {limit * 2} MORE</h3>
                     </div>}
                 </div>

@@ -3,13 +3,13 @@ import '../Signin Form/Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 import "./Switch.css";
 
-export default function AddClub({ socket }) {
+export default function AddClub({ socket, socketid }) {
 
     const [clubName, setClubName] = useState("");
     const [sport, setSport] = useState('football');
@@ -18,6 +18,9 @@ export default function AddClub({ socket }) {
     const containerRef = useRef();
     const sportsRef = useRef();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const socketId = socketid || location.state.socketId;
 
     const getClubId = () => {
         const length = 8;
@@ -48,7 +51,8 @@ export default function AddClub({ socket }) {
                 sport: sport,
                 clubId: clubId,
                 clubName: clubName,
-                socketId: socket.id
+                socketId: socketId,
+                public: !checked
             })
         };
 
