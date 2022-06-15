@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const { restart } = require('nodemon');
+
 const io = require('socket.io')(server, {
     cors: {
         origin: ["http://localhost:3000"]
@@ -16,12 +16,15 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+   
+        
 // Database connections
 
 const database = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password1'
+    password: 'password',
+    port: 3306
 });
 
 database.connect(err => {
