@@ -114,6 +114,7 @@ app.post('/create-club', (req, res) => {
     // owner: true, date, users, -> owner column 
     sql = 'SELECT * FROM ?? WHERE id = ?';
     database.query(sql, ['users', req.body.id], (err, rows) => {
+        console.log('here');
         if (err) throw err;
         if (rows.length !== 1) {
             res.json({error: 'User doesn\'t exist'});
@@ -125,7 +126,8 @@ app.post('/create-club', (req, res) => {
             name: req.body.clubName,
             owner: true,
             date: new Date(),
-            sport: req.body.sport
+            sport: req.body.sport,
+            public: req.body.public
         }];
 
         sql = 'UPDATE ?? SET clubs = ? WHERE id = ?';
@@ -155,24 +157,27 @@ app.post('/create-club', (req, res) => {
                 database.query(sql, [`${req.body.clubId}_users`], (err4, result) => {
                     if (err4) throw err4;
                     
-                    sql = 'INSERT INTO ?? (email, username, socket_id, posts, comments, sports) VALUES (?, ?, ?, ?, ?, ?)';
-                    const placeholders = [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([]), JSON.stringify([]), req.body.sport];
+                    sql = 'INSERT INTO ?? (email, username, socket_id, posts, sports) VALUES (?, ?, ?, ?, ?)';
+                    const placeholders = [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([]), req.body.sport];
                     database.query(sql, placeholders, (err5, result) => {
-                        
+                        console.log(req.body.public);
                         if (err5) throw err5;
+                        
                         sql = "CREATE TABLE IF NOT EXISTS ?? (";
                         sql += "id int primary key auto_increment not null, ";
                         sql += "club_id varchar(128) not null, ";
                         sql += "club_name varchar(128) not null, ";
                         sql += "owner varchar(256) not null, ";
                         sql += "sport varchar(256) not null, ";
+                        sql += "privacy int not null, ";
                         sql += "people int not null );";
+
                         database.query(sql, ["uniclubs"], (err6, result) => {
                             if (err6) throw err6;
-                            
-                            sql = "INSERT INTO ?? (club_id, club_name, owner, sport, people) VALUES (?, ?, ?, ?, ?)";
-                            database.query(sql, ["uniclubs", req.body.clubId, req.body.clubName, req.body.username, req.body.sport, 1], (err7, result) => {
-                                if (err7) throw err;
+                            console.log(req.body.public);
+                            sql = "INSERT INTO ?? (club_id, club_name, owner, sport, privacy, people) VALUES (?, ?, ?, ?, ?, ?)";
+                            database.query(sql, ["uniclubs", req.body.clubId, req.body.clubName, req.body.username, req.body.sport, req.body.public, 1], (err7, result) => {
+                                if (err7) throw err7;
                                 console.log("here 2 22");
                                 res.json({ status: true });
                                 console.log('New club');
@@ -211,8 +216,8 @@ app.post('/join-club', (req, res) => {
         database.query(sql, ["users", JSON.stringify(newClubs), req.body.id], (err2, result) => {
             if (err2) throw err;
             
-            sql = "INSERT INTO ?? (email, username, socket_id, posts, comments) VALUES (?, ?, ?, ?, ?); ";
-            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([]), JSON.stringify([])], (err3, inserted) => {
+            sql = "INSERT INTO ?? (email, username, socket_id, posts) VALUES (?, ?, ?, ?); ";
+            database.query(sql, [`${req.body.clubId}_users`, req.body.email, req.body.username, req.body.socketId, JSON.stringify([])], (err3, inserted) => {
                
                 if (err3) throw err;
                
@@ -265,27 +270,9 @@ app.post('/create-comment', (req, res) => {
         sql = "UPDATE ?? SET comments = ? WHERE id = ?";
         database.query(sql, [`${req.body.clubId}_posts`, JSON.stringify(newComments), req.body.postId], (err2, result) => {
             if (err2) throw err2;
-            sql = "SELECT * FROM ?? WHERE email = ?";
-            database.query(sql, [`${req.body.clubId}_users`, req.body.email], (err3, clubUsers) => {
-                if (err3) throw err3;
-                if (clubUsers.length !== 1) {
-                    res.json({error: "User not found"});
-                    return;
-                }
 
-                const newComments = [...JSON.parse(clubUsers[0]["comments"]), {
-                    from: req.body.username,
-                    content: req.body.content
-                }];
-
-                sql = "UPDATE ?? SET comments = ? WHERE email = ?";
-
-                database.query(sql, [`${req.body.clubId}_users`, JSON.stringify(newComments), req.body.email], (err4, result) => {
-                    if (err4) throw err4;
-                    console.log("Comment created!");
-                    res.json({ commented: true });
-                });
-            });
+            console.log("Comment created!");
+            res.json({ commented: true });
         });
     });
 });
@@ -434,10 +421,13 @@ app.post("/delete-comment", (req, res) => {
         if (err) throw err;
         if (rows.length !== 1) res.json({error: "Post not found"});
         const comments = JSON.parse(rows[0]["comments"]);
+
         const newComments = comments.filter((comment, commentIdx) => commentIdx !== req.body.commentIdx);
+        console.log("HERE HERE HWERE", newComments, req.body.commentIdx);
         sql = "UPDATE ?? SET comments = ? WHERE id = ?";
         database.query(sql, [`${req.body.clubId}_posts`, JSON.stringify(newComments), req.body.postIdx], (err2, result) => {
             if (err2) throw err2;
+            res.json({deleted: true});
         });
     });
 });
@@ -448,6 +438,46 @@ app.post("/group-users", (req, res) => {
         if (err) throw err;
         if (rows.length === 0) res.json({error: "Group users not found!"});
         res.json({users: rows});
+    });
+});
+
+app.post('/change-privacy', (req, res) => {
+    console.log(req.body.privacy);
+    sql = "UPDATE ?? SET privacy = ? WHERE club_id = ?";
+    database.query(sql, ["uniclubs", req.body.privacy, req.body.clubId], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        sql = "SELECT * FROM ??";
+
+        database.query(sql, ["uniclubs"], (err2, rows) => {
+            if (err2) throw err2;
+            sql = "SELECT * FROM ??";
+
+            database.query(sql, [`${req.body.clubId}_users`], (err, rows) => {
+                if (err) throw err;
+                rows.forEach(row => {
+                    sql = "SELECT * FROM ?? WHERE email = ?";
+                    database.query(sql, ["users", row.email], (err2, userRows) => {
+                        if (err2) throw err2;
+                        if (userRows.length !== 1) return;
+                        const userRow = userRows[0];
+                        let idx;
+                        JSON.parse(userRow.clubs).forEach((club, clubIdx) => {
+                            if (club.id === req.body.clubId) idx = clubIdx;
+                        });
+                        const newClubs = JSON.parse(userRow.clubs);
+                        
+                        Object.assign(newClubs[idx], {public: req.body.privacy});
+                        sql = "UPDATE ?? SET clubs = ? WHERE email = ?";
+                        database.query(sql, ["users", JSON.stringify(newClubs), row.email], (err3, updateResult) => {
+                            if (err3) throw err;
+                            console.log("SIUU", updateResult);
+                        });
+                    })
+                });
+            });
+
+        });
     });
 });
 
@@ -489,6 +519,10 @@ io.on("connection", socket => {
                 });
             });
         });
+    });
+
+    socket.on("request-add-friend", (username) => {
+
     });
 
     socket.on("disconnect", () => console.log("Disconnect"));

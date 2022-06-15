@@ -1,0 +1,96 @@
+.clubs-title
+{
+    margin-top: 3rem;
+    background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+   
+    font-size: 45px;
+}
+
+.clubs-container 
+{
+    display: flex;
+   
+    gap: 2.5rem;
+    margin: 2.5rem; 
+}
+
+.clubs-container > a 
+{
+    width: 100%;
+    max-width: 350px;
+}
+
+.clubs-container .club 
+{
+    width: 100%;
+    max-width: 350px;
+    min-height: 150px;
+    background: linear-gradient(var(--lightest-green), var(--darkest-green));
+    border-radius: .75rem;
+ 
+    cursor: pointer;
+    position: relative;
+    
+    overflow: hidden;
+    padding: .5rem;
+    transition: all 350ms ease;
+}
+
+.clubs-add-icon 
+{
+    cursor: pointer;
+    transition: all 300ms ease-in;
+}
+
+.clubs-container .club:hover,
+.clubs-add-icon:hover
+{
+    box-shadow: 5px 5px 15px var(--light-green),
+                -5px -5px 10px var(--lightest-green);
+}
+
+.clubs-container a
+{
+    text-decoration: none;
+    width: 100%;
+    color: initial;
+}
+
+.clubs-container .club .icon 
+{
+    position: absolute;
+    bottom: -40px;
+    left: -15px;
+    font-size: 80px;
+  
+}
+
+.clubs-container .club .owner 
+{
+    position: absolute;
+    right: 15px;
+    top: 0px;
+    color: #fff;
+    font-size: 30px;
+}
+
+.clubs-container .club .club-title
+{
+    font-size: 20px;
+    text-align: left;
+}
+
+.clubs-container .club .club-people 
+{
+    font-size: 16px;
+    text-align: left;
+    margin-left: .5rem;
+}
+
+.privacy-icon 
+{
+    color: #fff;
+    margin-left: 6px;
+}

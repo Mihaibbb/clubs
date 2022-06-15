@@ -45,7 +45,7 @@ function App() {
           <Routes>
             <Route path={'/contactus'} element={<ContactUs socket={realSocket} socketId={socketId} />} />
             <Route path={'/signin'} element={<Signin socket={realSocket} socketId={socketId} />} />
-            <Route path={'/add-club'} element={<AddClub socket={realSocket} socketId={socketId} />} />
+            <Route path={'/add-club'} element={<AddClub socket={realSocket} socketid={socketId} />} />
             <Route path={'/add-post'} element={<AddPost socket={realSocket} socketId={socketId} />} />
             <Route path={'/add-comment'} element={<AddComment socket={realSocket} socketId={socketId} />} />
             <Route path={'/clubs'} element={<Clubs socket={realSocket} socketId={socketId} />} />
