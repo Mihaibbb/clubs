@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 
 const io = require('socket.io')(server, {
     cors: {
-        origin: ["http://localhost:3000"]
+        origin: ["http://localhost:3000", "http://192.168.1.11:3000"]
     }
 });
 
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-   
+
         
 // Database connections
 
@@ -55,6 +55,7 @@ database.connect(err => {
     sql += 'sports json not null, ';
     sql += 'friends json not null, ';
     sql += 'clubs json not null, ';
+    sql += 'notifications json not null, ';
     sql += 'socket_id varchar(256) );';
 
     database.query(sql, (err, result) => {
@@ -67,6 +68,9 @@ let sql;
 
 // Routes 
 
+app.get("/", (req, res) => {
+    res.send("Hello");
+});
 
 // User sign up
 app.post('/signup', (req, res) => {
@@ -79,8 +83,8 @@ app.post('/signup', (req, res) => {
             return;
         }
         const hashPassword = await bcrypt.hash(req.body.password, 10);
-        const placeholders = ['users', req.body.email, req.body.username, req.body.firstName, req.body.lastName, hashPassword, null, JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), req.body.socket_id];
-        sql = 'INSERT INTO ?? (email, username, first_name, last_name, password, profile_image, sports, friends, clubs, socket_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const placeholders = ['users', req.body.email, req.body.username, req.body.firstName, req.body.lastName, hashPassword, null, JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), req.body.socket_id];
+        sql = 'INSERT INTO ?? (email, username, first_name, last_name, password, profile_image, sports, friends, clubs, notifications, socket_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         database.query(sql, placeholders, (err, result) => {
             if (err) throw err;
             console.log('User inserted!');
@@ -481,6 +485,54 @@ app.post('/change-privacy', (req, res) => {
     });
 });
 
+app.post("/add-friend", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", req.body.username], (err, rows) => {
+        if (err) throw err;
+        if (rows.length !== 1) return;
+        const newFriends = [...JSON.parse(rows[0]["friends"]), {
+            username: req.body.friendUsername
+        }];
+        sql = "UPDATE ?? SET friends = ? WHERE username = ?";
+        database.query(sql, ["users", newFriends, req.body.username], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+        });
+    });
+});
+
+app.post("/remove-friend", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", req.body.username], (err, rows) => {
+        if (err) throw err;
+        if (rows.length !== 1) return;
+        const newFriends = JSON.parse(rows[0]["friends"]);
+        newFriends.forEach((currFriend, idx) => {
+            if (currFriend.username === req.body.removeFriendUsername) newFriends.splice(idx, 1);
+        });
+
+        sql = "UPDATE ?? SET friends = ? WHERE username = ?";
+        database.query(sql, ["users", newFriends, req.body.username], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+        });
+    });
+
+    database.query(sql, ["users", req.body.removeFriendUsername], (err, rows) => {
+        if (err) throw err;
+        if (rows.length !== 1) return;
+        const newFriends = JSON.parse(rows[0]["friends"]);
+        newFriends.forEach((currFriend, idx) => {
+            if (currFriend.username === req.body.username) newFriends.splice(idx, 1);
+        });
+
+        sql = "UPDATE ?? SET friends = ? WHERE username = ?";
+        database.query(sql, ["users", newFriends, req.body.removeFriendUsername], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+        });
+    });
+});
 
 io.on("connection", socket => {
     console.log("Connected!");
@@ -513,20 +565,59 @@ io.on("connection", socket => {
                     sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
                     database.query(sql, [`${club.id}_users`, socket.id, email], (err3, result) => {
                         if (err3) throw err3;
+                        sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
                         console.log(result);
+                        database.query(sql, ["users", socket.id, email], (err, result) => {
+                            if (err) throw err;
+                            console.log(result);
+                        });
                     });
-                    
                 });
             });
         });
     });
 
-    socket.on("request-add-friend", (username) => {
+    socket.on("request-add-friend", (username, friendUsername, message) => {
+        sql = "SELECT * FROM ?? WHERE username = ?";
+        database.query(sql, ["users", friendUsername], (err, rows) => {
+            if (err) throw err;
+            if (rows.length !== 1) return;
+            const friendSocket = rows[0]["socket_id"];
+            const friendNotifications = [...JSON.parse(rows[0]["notifications"]), {
+                message: message,
+                type: "friend-request"
+            }];
+            socket.to(friendSocket).emit("friend-request", username);            
 
+            sql = "UPDATE ?? SET notifications = ? WHERE username = ?";
+            database.query(sql, ["users", friendNotifications, friendUsername], (err, result) => {
+                if (err) throw err;
+                console.log(result);
+            });
+        });
+    });
+
+    socket.on("request-response", (username, response, message) => {
+        sql = "SELECT * FROM ?? WHERE username = ?";
+        database.query(sql, ["users", username], (err, rows) => {
+            if (err) throw err;
+            if (rows.length !== 1) return;
+            const friendSocket = rows[0]["socket_id"];
+            const friendNotifications = [...JSON.parse(rows[0]["notifications"]), {
+                message: message,
+                type: "friend-response"
+            }];
+            
+            sql = "UPDATE ?? SET notifications = ? WHERE username = ?";
+            database.query(sql, ["users", friendNotifications, username], (err, result) => {
+                if (err) throw err;
+                console.log(result);
+                socket.to(friendSocket).emit("friend-request-response", response);            
+            });
+        });
     });
 
     socket.on("disconnect", () => console.log("Disconnect"));
-
 });
 
 

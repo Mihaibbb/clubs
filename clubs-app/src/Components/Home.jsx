@@ -1,6 +1,6 @@
 import Header from "./Header";
 import "./Home.css";
-import logo from "../img/logo.png";
+import logo from "../img/uniclub.svg";
 import Sidebar from "../Sidebar/Sidebar";
 import Footer from "./Footer";
 import Searchbar from "./Searchbar";
@@ -20,11 +20,14 @@ export default function Home({socket, socketId}) {
                 <div className='row'>
                     <div className='column'>
                          <div className="stangatitlu">
-                            <h1>TODAY...</h1> <br></br>
+                            <h1 className="down-gradient">TODAY...</h1> <br></br>
                         </div>
                         <div className="text">
-                            <p><b>More than 1 in 3 people is obese.</b> Sport and healthy nutrition is the only way to combat the numbers. Flow is characterised by complete immersion in an activity, to the degree that nothing else matters.
-he attainment of flow is a situation in which there is a perfect match between the athletes</p>
+                            <p>
+                                <b>More than 1 in 3 people is obese.</b> 
+                                Sport and healthy nutrition is the only way to combat the numbers. Flow is characterised by complete immersion in an activity, to the degree that nothing else matters.
+                                he attainment of flow is a situation in which there is a perfect match between the athletes
+                            </p>
                 
                          </div>
                     </div>
@@ -33,12 +36,12 @@ he attainment of flow is a situation in which there is a perfect match between t
                         {!localStorage.getItem('logged') && <button className="button"><b> - GET STARTED -</b></button>}   
                     </Link> 
                     <div className="change">
-                         <h2>Be the change!</h2> 
+                         <h2 className="inspirational-message">Be the change!</h2> 
                     </div>
                     </div>
                     <div className='column'>
                         <div className="dreaptatitlu">
-                             <h1>...BE TOMORROW</h1>
+                             <h1 className="up-gradient">...BE TOMORROW</h1>
                         </div>
             <div className="text">
                 <p><b>Be the tomorrow you want to live in</b>, not the tomorrow life

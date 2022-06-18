@@ -1,4 +1,4 @@
-import logo from "../img/logo.png"
+import logo from "../img/uniclub.svg";
 import './Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";
@@ -181,6 +181,17 @@ export default function Signin({socket, socketId}) {
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" value={passwordUp} onChange={e => setPasswordUp(e.target.value)}/>
             </div>
+
+            <div className="preffered-sports">
+                <h2>What sports do you like?</h2>
+                <div className="sports-container">
+                  <div className="sport">
+
+                  </div>
+                </div>
+            </div>
+
+            
 
             <div className="errors">
               <p>{error}</p>

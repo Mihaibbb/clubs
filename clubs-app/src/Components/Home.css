@@ -8,105 +8,111 @@ html
     display: flex;
 }
  
-  .row {
-    line-height: 30px;
-    font-size: 20px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .whyuni{
-    margin-top: 95px;
-    width: 100%;
-    min-height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    animation: banner_text 1.5s 1;
-  }
-  
-  .button {
-    cursor: pointer;
-    background-color: var(--lightest-green);
-    max-width: 400px;
-    align-self: center;
-    border-radius: 400px;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    transition: all 350ms ease;
-  }
-
-  .button:hover{
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-  }
-
-  .text1{
-    line-height: 30px;
-    font-size: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-    position: relative;
-    left: +12.5%;
-    justify-content: space-around;
-    max-width: 400px;
-    justify-content: space-between;
-    margin-bottom: 50px;
-  }
-  .text2{
-    line-height: 30px;
-    font-size: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-    position: relative;
-    left: +35%;
-    justify-content: space-around;
-    max-width: 400px;
-    justify-content: space-between;
-    margin-bottom: 50px;
-  }
-  .logoish{
-    animation: rotate_logo 1s linear;
-    animation-delay: 1s;
-  }
-  .text3{
-    line-height: 30px;
-    font-size: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-    position: relative;
-    left: +34%;
-    justify-content: space-around;
-    max-width: 500px;
-    justify-content: space-between;
-    margin-bottom: 50px;
-  }
-  .column {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-    justify-content: space-around;
-    margin-left: 20px;
-    margin-right: 20px;
-   
-  }
-.change h2{
-  line-height: 80px;
+.row {
+  line-height: 30px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
 }
+
+.whyuni{
+  margin-top: 95px;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  animation: banner_text 1.5s 1;
+}
+
+.button {
+  cursor: pointer;
+  background-color: var(--lightest-green);
+  max-width: 400px;
+  align-self: center;
+  border-radius: 400px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition: all 350ms ease;
+}
+
+.button:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.text1{
+  line-height: 30px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  position: relative;
+  left: +12.5%;
+  justify-content: space-around;
+  max-width: 400px;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  color: var(--text-color);
+}
+.text2{
+  line-height: 30px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  position: relative;
+  left: +35%;
+  justify-content: space-around;
+  max-width: 400px;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  color: var(--text-color);
+}
+.logoish{
+  animation: rotate_logo 1s linear;
+  animation-delay: 1s;
+}
+.text3{
+  line-height: 30px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  position: relative;
+  left: +34%;
+  justify-content: space-around;
+  max-width: 500px;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  color: var(--text-color);
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  justify-content: space-around;
+  margin-left: 20px;
+  margin-right: 20px;
+  
+}
+
+.text p 
+{
+  color: var(--small-text-color);
+}
+
 .change 
 {
     font-size: 40px;
@@ -117,27 +123,29 @@ html
     color: black;
     width:100%;
     justify-content: center;
-    text-decoration: underline;     
-    text-decoration-color: var(--lightest-green);  
+
 }
 
 .change h2
 {
     line-height: 80px;
+    
 }
 
-  .stangatitlu{
-      color: var(--darkest-green);
-    /* background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
-  }
-  .dreaptatitlu{
-      color: var(--lightest-green);
-    /* background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
-  }
+.stangatitlu{
+    color: var(--darkest-green);
+  /* background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+}
+
+.dreaptatitlu{
+    color: var(--lightest-green);
+  /* background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+}
+
 .banner 
 {
     margin-top: 50px;
@@ -155,9 +163,18 @@ html
     font-size: 65px;
     max-width: 60%;
     text-align: center;
-    background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
+    background: -webkit-linear-gradient(0deg, var(--lightest-green), var(--darkest-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: var(--text-color);
+}
+
+h2.inspirational-message
+{
+    white-space: nowrap;
+    border-bottom: 5px solid var(--lightest-green);
+    color: var(--text-color);
+
 }
 
 @keyframes banner_text {

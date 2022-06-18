@@ -1,5 +1,7 @@
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../img/logo.png";
+import logo from "../img/uniclub.svg";
 import './Header.css';
 
 export default function Header({marginTop}) {
@@ -37,6 +39,12 @@ export default function Header({marginTop}) {
                 <div className="right-container">
                     {localStorage.getItem("logged") ? (
                         <>
+                            <li>
+                                <FontAwesomeIcon 
+                                    icon={faBell}
+                                    className="notifications-icon"
+                                />
+                            </li>
                             <Link to="/account">
                                 <li>Account</li>
                             </Link>                           

@@ -3,10 +3,9 @@
     width: 100%;
     height: 60px;
     /* background: linear-gradient(90deg, var(--lightest-green), var(--darkest-green)) */
-    background: #fff;
-    box-shadow: 0 0 15px var(--lightest-green),
-    0 -5px 15px var(--darkest-green);
-    padding-top: .3rem;
+    background: var(--background);
+    /* border-bottom: 1px solid var(--lightest-green); */
+    
 }
 
 .header .items
@@ -17,6 +16,7 @@
     grid-template-columns: .25fr .50fr .25fr;
     align-items: center;
     padding: 0 1rem;
+    height: 100%;
 }
 
 .header .items a
@@ -42,6 +42,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     cursor: pointer;
+    color: var(--text-color);
+}
+
+.header .items li .notifications-icon 
+{
+    font-size: 25px;
 }
 
 .header .items h1

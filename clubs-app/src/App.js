@@ -32,8 +32,9 @@ function App() {
       setSocketId(socket.id);
       
     });
+    
     if (!localStorage.getItem("email")) return;
-      socket.emit("update_socket", localStorage.getItem("email"));
+    socket.emit("update_socket", localStorage.getItem("email"));
   }, []);
   
   

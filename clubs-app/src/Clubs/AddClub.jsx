@@ -1,11 +1,11 @@
-import logo from "../img/logo.png"
+import logo from "../img/uniclub.svg";
 import '../Signin Form/Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
+import { faBasketball, faFutbol, faFutbolBall, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 import "./Switch.css";
 
@@ -101,7 +101,7 @@ export default function AddClub({ socket, socketid }) {
                                 setSport("football");
                             }}>
                                 <FontAwesomeIcon
-                                    icon={faSoccerBall}
+                                    icon={faFutbolBall}
                                 />
                                 <h3>Football</h3>
                                 

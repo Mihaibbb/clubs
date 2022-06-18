@@ -185,6 +185,7 @@ span{
     border-radius: 2rem;
     padding: .5rem;
     cursor: pointer;
+    color: #fff;
     
 }
 
@@ -240,5 +241,6 @@ span{
 {
     margin-left: 10px;
     margin-top: 5px;
+    color: #fff;
 }
 

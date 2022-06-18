@@ -1,9 +1,17 @@
 :root 
 {
-  --darkest-green: #18a24b;
+  --darkest-green: #00563f;
   --dark-green: #1bb955;
   --light-green: #1ecf5f;
   --lightest-green: #27e06b;
+  --background: rgb(24, 24, 24);
+  --text-color: #fff;
+  --small-text-color: rgba(255, 255, 255, .75);
+}
+
+body {
+  background: var(--background);
+
 }
 
 .App {
@@ -53,7 +61,7 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: rgb(14, 14, 14); 
 }
  
 /* Handle */

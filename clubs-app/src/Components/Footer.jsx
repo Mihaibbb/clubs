@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../img/logo.png";
+import logo from "../img/uniclub.svg";
 import './Footer.css';
 
 export default function Footer() {

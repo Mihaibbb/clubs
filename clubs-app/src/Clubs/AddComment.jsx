@@ -1,4 +1,4 @@
-import logo from "../img/logo.png"
+import logo from "../img/uniclub.svg";
 import '../Signin Form/Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";

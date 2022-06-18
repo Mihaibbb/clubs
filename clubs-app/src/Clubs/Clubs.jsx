@@ -94,10 +94,9 @@ export default function Clubs({socketId}) {
         setPersonalClubs(realClubs);
         console.log(realClubs);
         realClubs.forEach(async club => {
-          console.log("club here");
-          console.log(club)
-          await getMembers(club.id);
-          
+            console.log("club here");
+            console.log(club)
+            await getMembers(club.id);
         });
   
         localStorage.setItem("clubs", JSON.stringify(realClubs));
@@ -112,8 +111,8 @@ export default function Clubs({socketId}) {
     return personalClubs && (
         <div className="clubs">
             <Header />
-            <h2 className="clubs-title">Your clubs</h2>
-            <div className="clubs-container">
+            {/* {personalClubs.length > 0 && <h2 className="clubs-title">Your clubs</h2>} */}
+            <div className={personalClubs.length === 0 ? "clubs-container empty" : "clubs-container"}>
                 {personalClubs.length > 0 && personalClubs.map((personalClub, clubIdx) => (
                     
                         <div className="club" onClick={(e) => {
@@ -126,10 +125,7 @@ export default function Clubs({socketId}) {
                             </div>
                             <div className="club-title">
                                 <h3>{personalClub.name} 
-                                <FontAwesomeIcon 
-                                  className="privacy-icon" icon={personalClub.public ? faLockOpen : faLock}
-                                  onClick={async () => personalClub.owner ? await changePrivacy(personalClub.id, !personalClub.public) : null}
-                                />
+
                                 </h3>
                             </div>
                             <div className="club-people">
@@ -140,9 +136,20 @@ export default function Clubs({socketId}) {
                                     <FontAwesomeIcon icon={faCrown} />
                                 </div>
                             )}
+
+                            <div 
+                                className="privacy-container" 
+                                onClick={async () => personalClub.owner ? await changePrivacy(personalClub.id, !personalClub.public) : null}
+                            >
+                                <FontAwesomeIcon 
+                                    className="privacy-icon" icon={personalClub.public ? faLockOpen : faLock}
+                                />
+                            </div>
                         </div>
                     
                 ))}
+
+                <h2 className="centered-title">{personalClubs.length === 0 ? "No clubs" : ""}</h2>
 
                 
                 <FontAwesomeIcon 

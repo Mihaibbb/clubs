@@ -10,10 +10,20 @@
 
 .clubs-container 
 {
-    display: flex;
-   
-    gap: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(300px, 1fr));
+    column-gap: 2.5rem;
+    row-gap: 3rem;
     margin: 2.5rem; 
+}
+
+.clubs-container.empty 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+    margin: 0;
 }
 
 .clubs-container > a 
@@ -63,7 +73,7 @@
     position: absolute;
     bottom: -40px;
     left: -15px;
-    font-size: 80px;
+    font-size: 70px;
   
 }
 
@@ -89,8 +99,30 @@
     margin-left: .5rem;
 }
 
+.privacy-container 
+{
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    
+}
+
+.privacy-container:hover .privacy-icon
+{
+    transform: initial;
+}
+
 .privacy-icon 
 {
     color: #fff;
-    margin-left: 6px;
+    transform: rotateY(180deg);
+    font-size: 30px;
+    transition: all 350ms ease-in-out;
+}
+
+.centered-title 
+{
+    text-align: center;
+    font-size: 50px;
+    color: #666;
 }

@@ -38,8 +38,9 @@ const SidebarNav = styled.nav`
   justify-content: center;
   position: fixed;
   top: 0;
-  transition: all 350ms ease-in-out;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
+
+  transition: left 650ms ease-in-out;
   
   z-index: 10;
 `;
@@ -65,9 +66,8 @@ const Sidebar = (socketId) => {
   const [personalClubs, setPersonalClubs] = useState(null);
   const [members, setMembers] = useState([]);
   let started = false;
-  const showSidebar = () => setSidebar(!sidebar);
+  const showSidebar = () => setSidebar(sideBar => !sideBar);
   const navigate = useNavigate();
-
   
   const getMembers = async (clubId) => {
     console.log(clubId);
