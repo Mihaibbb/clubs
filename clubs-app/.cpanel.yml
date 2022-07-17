@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/razvanboabes/
+    - /bin/cp -R /home/razvanboabes/repo/public_html $DEPLOYPATH
+    - /bin/cp -R /home/razvanboabes/repo/lib $DEPLOYPATH
