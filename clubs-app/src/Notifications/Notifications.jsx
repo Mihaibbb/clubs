@@ -49,7 +49,7 @@ export default function Notifications({socket, socketId}) {
             const fetchResponse = await fetch("http://localhost:8080/remove-notification", options);
             const response = await fetchResponse.json();
             if (!response.result) return;
-            
+
         } catch (e) {
             console.log(e);
         }
@@ -73,6 +73,8 @@ export default function Notifications({socket, socketId}) {
             const resJSON = await response.json();
             const joined = await resJSON.joined;
             if (await joined) navigate(`/clubs/${clubId}`);
+            console.log('..');
+
         } catch (e) {
             console.log(e);
         }
