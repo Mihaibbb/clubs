@@ -37,7 +37,7 @@ export default function UserAccount({socket, socketId}) {
             },
             body: JSON.stringify({
                 username: username
-            })
+            }),
         };
         
         const fetchResponse = await fetch("http://localhost:8080/user-data", options);
