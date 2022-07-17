@@ -5,7 +5,7 @@ import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router";
 
-export default function Account() {
+export default function Account({socket, socketId}) {
 
   const containerRef = useRef();
  
@@ -39,7 +39,7 @@ export default function Account() {
   return (
     <> 
 
-      <Header marginTop={0}/>
+      <Header socket={socket} socketId={socketId} />
       <Helmet>
         <script
           src="https://kit.fontawesome.com/64d58efce2.js"
@@ -81,17 +81,7 @@ export default function Account() {
             <input type="submit" value="Update account" className="solid btn" onClick={async () => await updateAccount()} />
           </div>
         </div>
-        <div className="panel right-panel">
-          <div className="content">
-            <h3>One of us ?</h3>
-            <p>
-            We are glad to have you back on our platform to optimize your lifestyle. Welcome back!
-            </p>
-            <button className="btn transparent" id="sign-in-btn" onClick={() => containerRef.current.classList.remove('sign-up-mode')}>
-              Sign in
-            </button>
-          </div>
-    </div>
+        
   </div>
     </>
   );

@@ -1,11 +1,12 @@
 .header
 {
     width: 100%;
+   
     height: 60px;
     /* background: linear-gradient(90deg, var(--lightest-green), var(--darkest-green)) */
     background: var(--background);
     /* border-bottom: 1px solid var(--lightest-green); */
-    
+    margin: 1.5rem 0 2.5rem;
 }
 
 .header .items
@@ -13,7 +14,7 @@
     
     display: grid;
     justify-content: space-between;
-    grid-template-columns: .25fr .50fr .25fr;
+    grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
     padding: 0 1rem;
     height: 100%;
@@ -26,6 +27,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .header .items .logo 
@@ -33,6 +35,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    
+    
+}
+
+.header .items .logo a 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.header .items .logo img
+{
+    max-height: 80px;
+   
 }
 
 .header .items li 
@@ -43,11 +61,12 @@
     -webkit-text-fill-color: transparent;
     cursor: pointer;
     color: var(--text-color);
+    font-size: 16px;
 }
 
 .header .items li .notifications-icon 
 {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .header .items h1
@@ -56,6 +75,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     cursor: pointer;
+    
 }
 
 .header .items .left-container 
@@ -85,13 +105,20 @@
 }
 
 .header .items .logo img {
-    animation: rotate_logo 1s linear;
-    animation-delay: 1s;
+   animation: animation 1s 1;
+   
 }
 
-@keyframes rotate_logo {
+
+@keyframes animation {
    
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
     100% {
-        transform: rotateZ(360deg);
+        opacity: 1;
+        transform: translateY(initial);
     }
 }

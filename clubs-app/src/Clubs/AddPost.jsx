@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
 import "./AddClub.css";
 
-export default function AddPost({ socket }) {
+export default function AddPost({ socket, socketId }) {
 
     const [postName, setPostName] = useState("");
     const [postContent, setPostContent] = useState("");
@@ -60,7 +60,7 @@ export default function AddPost({ socket }) {
 
     return (
         <> 
-            <Header marginTop={0}/>
+            <Header socket={socket} socketId={socketId} />
             <Helmet>
                 <script
                 src="https://kit.fontawesome.com/64d58efce2.js"

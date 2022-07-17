@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketball, faFutbol, faFutbolBall, faPingPongPaddleBall, faSoccerBall, faVolleyball } from "@fortawesome/free-solid-svg-icons";
+import SPORTS from "../Sports/Sports";
 import "./AddClub.css";
 import "./Switch.css";
 
@@ -21,6 +22,9 @@ export default function AddClub({ socket, socketid }) {
     const location = useLocation();
 
     const socketId = socketid || location.state.socketId;
+    const realSocket = socket || location.state.socketId;
+
+    console.log(SPORTS);
 
     const getClubId = () => {
         const length = 8;
@@ -63,14 +67,14 @@ export default function AddClub({ socket, socketid }) {
             return;
         }
         
-        navigate("/");
+        navigate("/clubs");
     };
 
     if (!localStorage.getItem("logged")) navigate("/");
 
     return (
-        <> 
-            <Header marginTop={0}/>
+        <div className="club-cont"> 
+            <Header socket={realSocket} socketId={socketId} />
             <Helmet>
                 <script
                 src="https://kit.fontawesome.com/64d58efce2.js"
@@ -90,56 +94,33 @@ export default function AddClub({ socket, socketid }) {
                                 placeholder="Club's Name..." 
                                 value={clubName} 
                                 onChange={e => setClubName(e.target.value)} 
+                                className="club-input"
                             />
                             
                         </div>
 
                         <div className="sports-container" ref={sportsRef}>
-                            <div className="sport active" onClick={e => {
-                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
-                                sportsRef.current.childNodes[0].classList.add("active");
-                                setSport("football");
-                            }}>
-                                <FontAwesomeIcon
-                                    icon={faFutbolBall}
-                                />
-                                <h3>Football</h3>
+                            {Object.values(SPORTS).map((sport, sportIdx) => {
+                                const sportName = Object.keys(SPORTS)[sportIdx];
                                 
-                            </div>
-                            <div className="sport" onClick={e => {
-                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
-                                sportsRef.current.childNodes[1].classList.add("active");
-                                setSport("basketball");
-                            }}>
-                                <FontAwesomeIcon
-                                    icon={faBasketball}
-                                />
-                                <h3>Basketball</h3>
+                               
+                                let sportTitle = sportName.replaceAll("_", " ");
+                                sportTitle = sportTitle.charAt(0).toUpperCase() + sportTitle.slice(1);
                                 
-                            </div>
-                            <div className="sport" onClick={e => {
-                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
-                                sportsRef.current.childNodes[2].classList.add("active");
-                                setSport("volley");
-                            }}>
-                                <FontAwesomeIcon
-                                    icon={faVolleyball}
-                                />
-                                <h3>Volley</h3>
-                                
-                            </div>
-                            <div className="sport" onClick={e => {
-                                sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
-                                sportsRef.current.childNodes[3].classList.add("active");
-                                setSport("ping_pong");
-                            }}>
-                                <FontAwesomeIcon
-                                    icon={faPingPongPaddleBall}
-                                />
-                                <h3>Ping Pong</h3>
-                                
-                            </div>
+                                return (
+                                    <div className={sportIdx !== 0 ? "sport" : "sport active"} onClick={e => {
+                                        
+                                        sportsRef.current.childNodes.forEach(child => child.classList.remove('active'));
+                                        sportsRef.current.childNodes[sportIdx].classList.add("active");
+                                        setSport(sportName);
+                                    }}>
+                                        {sport}
+                                        <h3>{sportTitle}</h3>
+                                    </div>
+                                );
+                            })}
                         </div>
+
 
                         <div className="privacy">
                         <label className="switch">
@@ -171,6 +152,6 @@ export default function AddClub({ socket, socketid }) {
                     
                 </div>
             </div>
-        </>
+        </div>
     );
 };

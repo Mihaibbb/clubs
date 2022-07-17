@@ -16,9 +16,12 @@ import Account from './Account/Account';
 import Footer from './Components/Footer';
 import AddPost from './Clubs/AddPost';
 import AddComment from './Clubs/AddComment';
+import UserAccount from './Account/UserAccount';
 
 import { io } from "socket.io-client";
 import Clubs from './Clubs/Clubs';
+import Search from './Search/Search';
+import Notifications from './Notifications/Notifications';
 
 function App() {
   const [realSocket, setRealSocket] = useState(null);
@@ -52,6 +55,9 @@ function App() {
             <Route path={'/clubs'} element={<Clubs socket={realSocket} socketId={socketId} />} />
             <Route path={'/clubs/:id'} element={<Club socket={realSocket} socketId={socketId} />} />
             <Route path={'/account'} element={<Account socket={realSocket} socketId={socketId} />} />
+            <Route path={'/search/:query'} element={<Search socket={realSocket} socketId={socketId} />} />
+            <Route path={'/notifications'} element={<Notifications socket={realSocket} socketId={socketId} />} />
+            <Route path={'/account/:username'} element={<UserAccount socket={realSocket} socketId={socketId} />} />
             <Route path={'/'} element={<Home socket={realSocket} socketId={socketId} />} />
           </Routes>
       </Router>

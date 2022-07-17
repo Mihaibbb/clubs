@@ -74,7 +74,12 @@
     bottom: -40px;
     left: -15px;
     font-size: 70px;
-  
+    
+}
+
+.clubs-container .club .icon img 
+{
+    width: 70px;
 }
 
 .clubs-container .club .owner 

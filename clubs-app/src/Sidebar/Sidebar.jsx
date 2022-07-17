@@ -9,8 +9,8 @@ import "./Sidebar.css";
 
 const Nav = styled.div`
   background: linear-gradient(135deg, var(--darkest-green), var(--lightest-green));
-  height: 80px;
-  width: 80px;
+  height: 70px;
+  width: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,10 +20,10 @@ const Nav = styled.div`
   
 const NavIcon = styled(Link)`
  
-  font-size: 2rem;
-  height: 80px;
+  font-size: 2.3rem;
+  height: 70px;
   width: 100%;
-  max-width: 80px;
+  max-width: 70px;
   display: flex;
   justify-content: center;
   align-items: center;

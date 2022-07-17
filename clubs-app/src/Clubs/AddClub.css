@@ -1,12 +1,38 @@
+.club-cont
+{
+    max-width: 100%;
+}
+
+.forms-container
+{
+    background: var(--background);
+}
+
 .sports-container 
 {
     width: 100%;
     max-width: 380px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    
+    align-items: center;
     gap: 1.5rem;
-    margin: 1.5rem auto;
+    margin: 2rem auto;
+    max-height: 25vh;
+    overflow-y: auto;
+
+    border-radius: 2rem;
+}
+
+.input-field 
+{
+    background: rgba(255, 255, 255, 0.2);
+    
+}
+
+.input-field input 
+{
+    color: #fff;
 }
 
 .sports-container .sport 
@@ -16,12 +42,12 @@
     
     align-items: center;
     height: 45px;
-    background: rgba(0, 0, 0, .2);
+    background: rgba(255, 255, 255, .2);
     column-gap: .5rem;
     padding: 1rem;
     border-radius: 34px;
     cursor: pointer;
-    
+    color: rgba(255, 255, 255, .75);
     transition: all 450ms ease-in-out;
 }
 
@@ -36,9 +62,12 @@
 {
     width: 100%;
     max-width: 380px;
+  
 }
 
 .btn.solid 
 {
-    margin-top: 2rem;
+    margin-top: 5rem;
+  
+    border-radius: 8px;
 }

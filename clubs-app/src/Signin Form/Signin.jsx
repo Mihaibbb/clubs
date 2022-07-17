@@ -3,6 +3,7 @@ import './Signin.css';
 import { useState, useRef } from "react";
 import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
+import SPORTS from "../Sports/Sports";
 import { useNavigate } from "react-router-dom";
 
 export default function Signin({socket, socketId}) {
@@ -15,9 +16,12 @@ export default function Signin({socket, socketId}) {
   const [usernameUp, setUsernameUp] = useState("");
   const [emailUp, setEmailUp] = useState("");
   const [passwordUp, setPasswordUp] = useState("");
+  const [sport, setSport] = useState("football");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+
+  const sportsRef = useRef();
 
   const signInForm = async () => {
     if (emailIn.search("@") === -1 || emailIn.search(".") === -1) {
@@ -105,7 +109,7 @@ export default function Signin({socket, socketId}) {
 
   return (
     <> 
-      <Header marginTop={0}/>
+      <Header socket={socket} socketId={socketId}/>
       <Helmet>
         <script
           src="https://kit.fontawesome.com/64d58efce2.js"
@@ -184,11 +188,26 @@ export default function Signin({socket, socketId}) {
 
             <div className="preffered-sports">
                 <h2>What sports do you like?</h2>
-                <div className="sports-container">
-                  <div className="sport">
-
-                  </div>
-                </div>
+                <div className="sports-container" ref={sportsRef}>
+                            {Object.values(SPORTS).map((sport, sportIdx) => {
+                                const sportName = Object.keys(SPORTS)[sportIdx];
+                                
+                               
+                                let sportTitle = sportName.replaceAll("_", " ");
+                                sportTitle = sportTitle.charAt(0).toUpperCase() + sportTitle.slice(1);
+                                
+                                return (
+                                    <div className={sportIdx !== 0 ? "sport" : "sport active"} onClick={e => {
+                                      
+                                        sportsRef.current.childNodes[sportIdx].classList.toggle("active");
+                                        setSport(currSports => [...currSports, sportName]);
+                                    }}>
+                                        {sport}
+                                        <h3>{sportTitle}</h3>
+                                    </div>
+                                );
+                            })}
+                        </div>
             </div>
 
             
@@ -229,7 +248,7 @@ export default function Signin({socket, socketId}) {
               Sign up
             </button>
           </div>
-          <img src={logo} className="image" alt="" />
+          <img className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="content">
@@ -241,7 +260,7 @@ export default function Signin({socket, socketId}) {
               Sign in
             </button>
           </div>
-          <img src={logo} className="image" alt="" />
+          <img className="image" alt="" />
         </div>
       </div>
     </div>

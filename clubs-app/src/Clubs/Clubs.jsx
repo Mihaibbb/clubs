@@ -5,9 +5,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Clubs.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown, faLock, faLockOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
+import addIcon from "../img/plus.svg";
 
-
-export default function Clubs({socketId}) {
+export default function Clubs({socket, socketId}) {
 
     const [sidebar, setSidebar] = useState(false);
     const [personalClubs, setPersonalClubs] = useState(null);
@@ -110,12 +110,12 @@ export default function Clubs({socketId}) {
 
     return personalClubs && (
         <div className="clubs">
-            <Header />
+            <Header socket={socket} socketId={socketId} />
             {/* {personalClubs.length > 0 && <h2 className="clubs-title">Your clubs</h2>} */}
             <div className={personalClubs.length === 0 ? "clubs-container empty" : "clubs-container"}>
                 {personalClubs.length > 0 && personalClubs.map((personalClub, clubIdx) => (
                     
-                        <div className="club" onClick={(e) => {
+                        <div className="club" key={clubIdx} onClick={(e) => {
                             console.log(e.target.tagName);
                             if (e.target.tagName.toLowerCase() === "path" || e.target.tagName.toLowerCase() === "svg") return;
                             navigate(`/clubs/${personalClub.id}`)
@@ -152,11 +152,9 @@ export default function Clubs({socketId}) {
                 <h2 className="centered-title">{personalClubs.length === 0 ? "No clubs" : ""}</h2>
 
                 
-                <FontAwesomeIcon 
-                    icon={faPlus} 
-                    className="add-icon clubs-add-icon"
-                    onClick={() => navigate("/add-club", { state: { socketId: socketId} })} 
-                />
+                <div className="add-icon">
+                  <img src={addIcon} onClick={() => navigate("/add-club", { state: { socket: socket, socketId: socketId} })} />
+              </div>
                 
             </div>
         </div>

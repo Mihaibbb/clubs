@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+};
+
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -16,8 +20,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-
-        
 // Database connections
 
 const database = mysql.createConnection({
@@ -82,7 +84,8 @@ app.post('/signup', (req, res) => {
             res.json({error: 'Email or username have already been used!'});
             return;
         }
-        const hashPassword = await bcrypt.hash(req.body.password, 10);
+        const salt = await bcrypt.genSalt(parseInt(process.env.SALT));
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
         const placeholders = ['users', req.body.email, req.body.username, req.body.firstName, req.body.lastName, hashPassword, null, JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), JSON.stringify([]), req.body.socket_id];
         sql = 'INSERT INTO ?? (email, username, first_name, last_name, password, profile_image, sports, friends, clubs, notifications, socket_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         database.query(sql, placeholders, (err, result) => {
@@ -247,6 +250,24 @@ app.post('/join-club', (req, res) => {
     });
 });
 
+app.post("remove-from-club", (req, res) => {
+    const { id, clubId } = req.body;
+    if (id === 1) return;
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", id], (err, rows) => {
+        if (err) {
+            res.status(404).json({ message: "User not found!" });
+            return;
+        }
+        const username = rows[0]["username"];
+        sql = "DELETE FROM ?? WHERE username = ?";
+
+        database.query(sql, [`${clubId}_users`, username], (err, result) => {
+            if (err) throw err;
+            if (result) res.status(200).json({ result: true });
+        });
+    })
+});
 
 app.post('/create-post', (req, res) => {
     sql = "INSERT INTO ?? (creator, content, title, comments) VALUES (?, ?, ?, ?)";
@@ -297,6 +318,115 @@ app.post('/get-clubs', (req, res) => {
     });
 });
 
+app.post("/get-admin", (req, res) => {
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, [`${req.body.clubId}_users`, 1], (err, rows) => {
+        if (err) throw err;
+        res.json({ admin: rows[0]["username"], socket: rows[0]["socket_id"] });
+    });
+}); 
+
+app.post("/get-notifications", (req, res) => {
+    const { id } = req.body; 
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", id], (err, rows) => {
+        if (err) throw err;
+        if (!rows) return;
+        if (!rows[0]) return;
+        const notifications = JSON.parse(rows[0]["notifications"]);
+      
+
+        res.status(200).json({ notifications: notifications });
+    });
+});
+
+app.post("/remove-notification", (req, res) => {
+    const { id, dbId } = req.body;
+    sql = 'SELECT * FROM ?? WHERE id = ?';
+    database.query(sql, ["users", id], (err, rows) => {
+        if (err) throw err;
+        if (!rows) return;
+        if (!rows[0]) return;
+
+        const notifications = JSON.parse(rows[0]["notifications"]);
+        const newNotifications = notifications.filter((notification, idx) => idx !== dbId);
+
+        sql = "UPDATE ?? SET notifications = ? WHERE id = ?";
+        database.query(sql, ["users", JSON.stringify(newNotifications), id], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.status(200).json({ result: true })
+        });
+    });
+});
+
+app.post("/push-notification", (req, res) => {
+    const { from, to, message, type } = req.body;
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", to], (err, rows) => {
+        if (err) throw err;
+        if (!rows || !rows[0]) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        const adminNotifications = JSON.parse(rows[0]["notifications"]);
+        adminNotifications.unshift({
+            type: type,
+            from: from,
+            message: message
+        });
+
+        console.log(adminNotifications);
+
+        sql = "UPDATE ?? SET notifications = ? WHERE username = ?";
+
+        database.query(sql, ["users", JSON.stringify(adminNotifications), to], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.json({ result: true });
+        }); 
+        
+    });
+}); 
+
+app.post("/get-club-data", (req, res) => {
+    sql = "SELECT * FROM ??";
+    
+    database.query(sql, [`${req.body.clubId}_users`], (err, rows) => {
+        if (err) throw err;
+        const username = rows[0].username;
+
+        sql = "SELECT * FROM ?? WHERE username = ?";
+        database.query(sql, ["users", username], (err, rows) => {
+            if (err) throw err;
+            if (!rows || !rows[0]) return;
+            const userClubs = JSON.parse(rows[0]["clubs"]);
+            const initialClubData = userClubs.find(club => club.id === req.body.clubId);
+            console.log("FOUND", initialClubData);
+            res.status(200).json({ sport: initialClubData.sport, name: initialClubData.name, public: initialClubData.public });
+        }); 
+    });
+});
+
+app.post('/check-user-in-club', (req, res) => {
+    sql = 'SELECT * FROM ?? WHERE id = ?';
+    database.query(sql, ["users", req.body.id], (err, rows) => {
+      
+        if (err || !rows || rows.length === 0) {
+            res.status(404).json({ result: false });
+            return;
+        }
+      
+        const activeClubs = JSON.parse(rows[0]["clubs"]);
+        console.log(JSON.parse(rows[0]["clubs"]));
+        const foundClub = activeClubs.some(club => club.id === req.body.clubId);
+        console.log(foundClub)
+        res.status(200).json({ result: foundClub });
+    });
+
+});
+
 app.post("/get-members", (req, res) => {
     sql = "SELECT * FROM ?? WHERE email = ?";
     database.query(sql, [`${req.body.clubId}_users`, req.body.email], (err, rows) => {
@@ -313,9 +443,26 @@ app.post("/get-posts", (req, res) => {
     });
 });
 
+app.post("/get-posts-limit", (req, res) => {
+    sql = "SELECT * FROM ?? ORDER BY id DESC LIMIT ?";
+    database.query(sql, [`${req.body.clubId}_posts`, req.body.limit], (err, rows) => {
+        if (err) throw err;
+        res.json(rows);
+    });
+});
+
 app.post("/search-club", (req, res) => {
     sql = "SELECT * FROM ?? WHERE club_name LIKE concat('%' , ?, '%') OR club_id LIKE concat('%', ?, '%')";
-    database.query(sql, ["uniclubs", req.body.name, req.body.name], (err, rows) => {
+    database.query(sql, ["uniclubs", req.body.query, req.body.query], (err, rows) => {
+        if (err) throw err;
+        res.json(rows);
+    });
+});
+
+app.post("/search-people", (req, res) => {
+    console.log("SEARCH PEOPLE", req.body);
+    sql = "SELECT * FROM ?? WHERE username LIKE concat('%' , ?, '%') OR email LIKE concat('%', ?, '%')";
+    database.query(sql, ["users", req.body.query, req.body.query], (err, rows) => {
         if (err) throw err;
         res.json(rows);
     });
@@ -530,9 +677,60 @@ app.post("/remove-friend", (req, res) => {
         database.query(sql, ["users", newFriends, req.body.removeFriendUsername], (err, result) => {
             if (err) throw err;
             console.log(result);
+            res.status(200).json({ result: true });
         });
     });
 });
+
+app.post("/add-sports", (req, res) => {
+    const { id, sports } = req.body;
+
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", id], (err, rows) => {
+        if (err) throw err;
+        if (!rows || !rows[0]) {
+            res.status(404).json({ error: "User not found!" });
+            return;
+        }
+
+        sql = "UPDATE ?? SET sports = ? WHERE id = ?";
+        database.query(sql, ["users", JSON.stringify(sports), id], (err, result) => {
+            if (err) throw err;
+            console.log(result);
+        });
+    });
+});
+
+app.post("/get-recommendations", (req, res) => {
+    
+
+});
+
+app.post("/user-exists", (req, res) => {
+    const { username } = req.body;
+    console.log(username);
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", username], (err, rows) => {
+        console.log("NEW ROWS", rows);
+        if (err || !rows || !rows.length) {
+            console.log("IN IT")
+            res.json({ result: false });
+            return;
+        }
+
+        res.status(200).json({ result: true });
+    });
+});
+
+app.post("/user-data", (req, res) => {
+    const { username } = req.body;
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", username], (err, rows) => {
+        if (err) throw err;
+        res.json(rows[0]);
+    });
+});
+
 
 io.on("connection", socket => {
     console.log("Connected!");
@@ -616,6 +814,14 @@ io.on("connection", socket => {
             });
         });
     });
+
+    socket.on("push-notification", (from, socketAdmin, message, type) => {
+        const notification = { from, message, type };
+        console.log(socketAdmin);
+        socket.to(socketAdmin).emit("pull-notification", notification);
+    });
+
+    // Invite friend to group
 
     socket.on("disconnect", () => console.log("Disconnect"));
 });
