@@ -633,52 +633,56 @@ app.post('/change-privacy', (req, res) => {
 });
 
 app.post("/add-friend", (req, res) => {
+    const { username, friendUsername } = req.body;
     sql = "SELECT * FROM ?? WHERE username = ?";
-    database.query(sql, ["users", req.body.username], (err, rows) => {
+    database.query(sql, ["users", username], (err, rows) => {
         if (err) throw err;
         if (rows.length !== 1) return;
         const newFriends = [...JSON.parse(rows[0]["friends"]), {
-            username: req.body.friendUsername
+            username: friendUsername
         }];
         sql = "UPDATE ?? SET friends = ? WHERE username = ?";
-        database.query(sql, ["users", newFriends, req.body.username], (err, result) => {
+        database.query(sql, ["users", JSON.stringify(newFriends), username], (err, result) => {
             if (err) throw err;
             console.log(result);
+            res.status(200).json({ result: true, friendSocketId: rows[0]["socket_id"]});
         });
     });
 });
 
 app.post("/remove-friend", (req, res) => {
+    const { removeFriendUsername, username } = req.body;
+
     sql = "SELECT * FROM ?? WHERE username = ?";
-    database.query(sql, ["users", req.body.username], (err, rows) => {
+    database.query(sql, ["users", username], (err, rows) => {
         if (err) throw err;
         if (rows.length !== 1) return;
         const newFriends = JSON.parse(rows[0]["friends"]);
         newFriends.forEach((currFriend, idx) => {
-            if (currFriend.username === req.body.removeFriendUsername) newFriends.splice(idx, 1);
+            if (currFriend.username === removeFriendUsername) newFriends.splice(idx, 1);
         });
 
         sql = "UPDATE ?? SET friends = ? WHERE username = ?";
-        database.query(sql, ["users", newFriends, req.body.username], (err, result) => {
-            if (err) throw err;
-            console.log(result);
-        });
-    });
-
-    database.query(sql, ["users", req.body.removeFriendUsername], (err, rows) => {
-        if (err) throw err;
-        if (rows.length !== 1) return;
-        const newFriends = JSON.parse(rows[0]["friends"]);
-        newFriends.forEach((currFriend, idx) => {
-            if (currFriend.username === req.body.username) newFriends.splice(idx, 1);
-        });
-
-        sql = "UPDATE ?? SET friends = ? WHERE username = ?";
-        database.query(sql, ["users", newFriends, req.body.removeFriendUsername], (err, result) => {
+        database.query(sql, ["users", JSON.stringify(newFriends), username], (err, result) => {
             if (err) throw err;
             console.log(result);
             res.status(200).json({ result: true });
+
         });
+    });
+});
+
+app.post("/check-friend", (req, res) => {
+    const {username, friendUsername} = req.body;
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", username], (err, rows) => {
+        if (err) console.log(err);
+        if (!rows) return;
+        if (!rows[0]) return;
+        
+        const friends = JSON.parse(rows[0]["friends"]);
+        const result = friends.some(friend => friend.username === friendUsername);
+        res.json( { result } );
     });
 });
 
@@ -723,9 +727,9 @@ app.post("/user-exists", (req, res) => {
 });
 
 app.post("/user-data", (req, res) => {
-    const { username } = req.body;
-    sql = "SELECT * FROM ?? WHERE username = ?";
-    database.query(sql, ["users", username], (err, rows) => {
+    const { id } = req.body;
+    sql = "SELECT * FROM ?? WHERE id = ?";
+    database.query(sql, ["users", id], (err, rows) => {
         if (err) throw err;
         res.json(rows[0]);
     });
