@@ -46,7 +46,7 @@ export default function AddPost({ socket, socketId }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/create-post", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/create-post`, options);
         const res = await resJSON.json();
         if (res.error) {
             alert("ERROR!");

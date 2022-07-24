@@ -35,7 +35,7 @@ export default function AddComment({ socket }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/create-comment", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/create-comment`, options);
         const res = await resJSON.json();
         console.log(clubId, postIdx);
         if (res.error) {

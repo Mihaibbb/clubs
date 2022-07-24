@@ -1,5 +1,5 @@
 import { createRef } from "react";
-import { faAngleDown, faAngleUp, faPencil, faPlus, faTimes, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp, faPencil, faPlus, faTimes, faUser, faUserPlus, faUsers, faUserTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -48,7 +48,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        const res = await fetch("http://localhost:8080/check-user-in-club", options);
+        const res = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/check-user-in-club`, options);
         const resJSON = await res.json();
         const result = await resJSON.result;
         return await result;
@@ -67,7 +67,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        const checkJSON = await fetch("http://localhost:8080/check-admin", options);
+        const checkJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/check-admin`, options);
         const check = await checkJSON.json();
         setAdmin(await check.admin);
     };
@@ -83,7 +83,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        let resJSON = await fetch("http://localhost:8080/get-posts", options);
+        let resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-posts`, options);
         let rows = await resJSON.json();
         setPosts(rows);
 
@@ -97,7 +97,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        resJSON = await fetch("http://localhost:8080/get-comments", options);
+        resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-comments`, options);
         const res = await resJSON.json();
         const elements = await res.comments;
         setComments(elements);
@@ -114,7 +114,7 @@ export default function Club({ socket, socketId }) {
             })
         };
        
-        const resJSON = await fetch("http://localhost:8080/group-users", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/group-users`, options);
         const res = await resJSON.json();
         const users = await res.users;
         setGroupUsers(users);
@@ -144,7 +144,7 @@ export default function Club({ socket, socketId }) {
                 })
             };
 
-            const response = await fetch("http://localhost:8080/join-club", options);
+            const response = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/join-club`, options);
             const resJSON = await response.json();
             const joined = await resJSON.joined;
             if (await joined) navigate(`/clubs/${clubId}`);
@@ -160,20 +160,39 @@ export default function Club({ socket, socketId }) {
             };
 
             try {
-                const response = await fetch("http://localhost:8080/get-admin", options);
+                const response = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-admin`, options);
                 const adminResponse = await response.json();
                 const clubAdmin = await adminResponse.admin;
                 const clubAdminSocket = await adminResponse.socket;
-                
+                console.log(clubAdminSocket);
                 if (!await clubAdmin) return;
+
+                const userDataReq = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/user-data`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        id: localStorage.getItem("id")
+                    })
+                });
+
                 
+
+                const {email, username, socket_id} = await userDataReq.json();
+                console.log(email, username, socket_id, clubName, sport)
                 const notification = {
-                    from: localStorage.getItem('username'),
+                    from: username,
                     to: clubAdmin,
-                    message: `${localStorage.getItem('username')} requested to join you club!`,
+                    message: `${username} requested to join you club!`,
                     type: "join",
                     clubId: clubId,
-                    id: localStorage.getItem("id")
+                    id: localStorage.getItem("id"),
+                    clubName: clubName,
+                    sport: sport,
+                    email: email,
+                    username: username,
+                    socketId: socket_id
                 };
                 
                 const pushOptions = {
@@ -184,10 +203,10 @@ export default function Club({ socket, socketId }) {
                     body: JSON.stringify(notification)
                 };
 
-                socket.emit("push-notification", notification.from, await clubAdminSocket, notification.message, notification.type);
+                socket.emit("push-notification", notification, clubAdminSocket);
 
                 try {
-                    const noitificationFetch = await fetch("http://localhost:8080/push-notification", pushOptions);
+                    const noitificationFetch = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/push-notification`, pushOptions);
                     const notificationResponse = await noitificationFetch.json();
                     if (!await notificationResponse.result) return;    
                 } catch (e) {
@@ -213,7 +232,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        const res = await fetch("http://localhost:8080/get-club-data", options);
+        const res = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-club-data`, options);
         const resJSON = await res.json();
         const cName = await resJSON.name;
         const cSport = await resJSON.sport;
@@ -238,7 +257,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/delete-post", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/delete-post`, options);
        
         const res = await resJSON.json();
         console.log(res);
@@ -258,7 +277,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/delete-comment", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/delete-comment`, options);
         const res = await resJSON.json();
         if (res.deleted) window.location.reload();
        
@@ -276,7 +295,7 @@ export default function Club({ socket, socketId }) {
             })
         };
 
-        let resJSON = await fetch("http://localhost:8080/get-posts-limit", options);
+        let resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-posts-limit`, options);
         let rows = await resJSON.json();
         setCurrentPosts(rows);
 
@@ -352,77 +371,104 @@ export default function Club({ socket, socketId }) {
                 </div>
             </div>
 
-            {admin !== null ? <div className="posts-total">
+            {admin !== null ? 
+                <div className="posts-total">
 
-                <div className="group-people">
-                    <h2 className="title">Users</h2>
-                    {groupUsers && groupUsers.map((user, idx) => (
-                        <div className="user">
-                            <h3>{user.username}</h3>
-                        </div>
-                    ))}
-                </div>
+                    <div className="group-people">
+                        <h2 className="title">Users</h2>
+                        {groupUsers && groupUsers.map((user, idx) => (
+                            <div className="user">
+                                <h3>{user.username}</h3>
+                            </div>
+                        ))}
+                    </div>
 
-                <div className="posts">
-                    {currentPosts && currentPosts.map((post, idx) => (
-                        <div key={idx}>
-                        
-                        <div className="post-container">
-                            <div className="creator">
-                                <FontAwesomeIcon icon={faUser} />
-                                {post.creator}
-                            </div>
-                            <h2>{post.title}</h2>
-                            <div className="content">
-                                <p>{post.content}</p>
-                            </div>
-                            <div className="comment-container" onClick={() => navigate("/add-comment", { state: { clubId: clubId, postIdx: post.id } })}>
-                                <FontAwesomeIcon icon={faPencil}/>
-                            </div>
-                            {comments[idx].length > 0 && 
-                                <div className="show-comments" ref={ref => commentIconsRef.current[idx] = ref} onClick={() => {
-                                    if (!commentsRef.current[idx]) return;
-                                    commentsRef.current[idx].classList.toggle("active");
-                                    commentIconsRef.current[idx].classList.toggle("active");
-                                }}>
-                                    <FontAwesomeIcon icon={faAngleDown} />
-                          
-                                </div>
-                            }
-
-                            {admin && <div className="delete-post" onClick={async () => await deletePost(post.id)}>
-                                <FontAwesomeIcon icon={faTimes} />
-                            </div>}
+                    <div className="posts">
+                        {currentPosts && currentPosts.map((post, idx) => (
+                            <div key={idx}>
                             
-                        </div>
-
-                        <div className="comments" ref={ref => {
-                            console.log(commentsRef);
-                            commentsRef.current[idx] = ref;
-                        }}>
-                            { comments && comments[idx] && comments[idx].map((comment, commentIdx) => (
-                                <div className="comment" key={commentIdx}>
-                                    <div className="creator">
-                                        <FontAwesomeIcon icon={groupUsers.length === 1 ? faUser : faUsers} />
-                                        <h3>{comment.from}</h3>
-                                    </div>
-                                    <h2>{comment.content}</h2>
-                                    {admin && 
-                                        <div className="delete-comment" onClick={async () => await deleteComment(post.id, commentIdx)}>
-                                            <FontAwesomeIcon icon={faTimes} />
-                                        </div>
-                                    }
+                            <div className="post-container">
+                                <div className="creator">
+                                    <FontAwesomeIcon icon={faUser} />
+                                    {post.creator}
                                 </div>
-                            ))}
+                                <h2>{post.title}</h2>
+                                <div className="content">
+                                    <p>{post.content}</p>
+                                </div>
+                                <div className="comment-container" onClick={() => navigate("/add-comment", { state: { clubId: clubId, postIdx: post.id } })}>
+                                    <FontAwesomeIcon icon={faPencil}/>
+                                </div>
+                                {comments[idx].length > 0 && 
+                                    <div className="show-comments" ref={ref => commentIconsRef.current[idx] = ref} onClick={() => {
+                                        if (!commentsRef.current[idx]) return;
+                                        commentsRef.current[idx].classList.toggle("active");
+                                        commentIconsRef.current[idx].classList.toggle("active");
+                                    }}>
+                                        <FontAwesomeIcon icon={faAngleDown} />
+                            
+                                    </div>
+                                }
+
+                                {admin && <div className="delete-post" onClick={async () => await deletePost(post.id)}>
+                                    <FontAwesomeIcon icon={faTimes} />
+                                </div>}
+                                
+                            </div>
+
+                            <div className="comments" ref={ref => {
+                                console.log(commentsRef);
+                                commentsRef.current[idx] = ref;
+                            }}>
+                                { comments && comments[idx] && comments[idx].map((comment, commentIdx) => (
+                                    <div className="comment" key={commentIdx}>
+                                        <div className="creator">
+                                            <FontAwesomeIcon icon={groupUsers.length === 1 ? faUser : faUsers} />
+                                            <h3>{comment.from}</h3>
+                                        </div>
+                                        <h2>{comment.content}</h2>
+                                        {admin && 
+                                            <div className="delete-comment" onClick={async () => await deleteComment(post.id, commentIdx)}>
+                                                <FontAwesomeIcon icon={faTimes} />
+                                            </div>
+                                        }
+                                    </div>
+                                ))}
+                            </div>
+                        
+                            </div>
+                        ))}
+                        {posts && currentPosts && limit && posts.length > 0 && posts.length - currentPosts.length >= limit && <div className="show-more" onClick={() => showMorePosts()}>
+                            <h3>Show {limit} MORE</h3>
+                        </div>}
+                    </div>
+
+                    {admin && 
+                        <div className="options-container">
+                            <h2 className="title">Options</h2>
+                            <div className="option" onClick={() => navigate("/friends", { state: { clubName: clubName, clubId: clubId, sport: sport } })}>
+                                <p><FontAwesomeIcon icon={faUserPlus} /> Invite friend into club</p>
+                            </div>
+
+                            <div className="option" onClick={() => navigate("/remove-from-club", { state: { clubName: clubName, clubId: clubId } })}>
+                                <p><FontAwesomeIcon icon={faUserTimes} /> Remove people from club </p>
+                            </div>
+
+                            {/* <div className="option">
+                                
+                            </div>
+                            
+                            <div className="option">
+                                <p></p>
+                            </div>
+                            
+                            <div className="option">
+                                <p></p>
+                            </div> */}
                         </div>
-                    
-                        </div>
-                    ))}
-                    {posts && currentPosts && limit && posts.length > 0 && posts.length - currentPosts.length >= limit && <div className="show-more" onClick={() => showMorePosts()}>
-                        <h3>Show {limit} MORE</h3>
-                    </div>}
-                </div>
-            </div> : (
+                    }
+                </div>  
+            : (
                 <div className="join-container">
                     <h2>Would you like to join this club? </h2>
                     <button type="button" onClick={async () => await joinClub()} >{!clubPrivacy ? "Request now!" : "Join now!"}</button>

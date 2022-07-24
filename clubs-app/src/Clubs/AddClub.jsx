@@ -60,7 +60,7 @@ export default function AddClub({ socket, socketid }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/create-club", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/create-club`, options);
         const res = await resJSON.json();
         if (res.error) {
             setError(res.error);

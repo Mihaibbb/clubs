@@ -38,7 +38,12 @@ function Home({socket, socketId}) {
     useEffect(() => {
         (async () => {
             await getLocation();
+            
         })();
+    }, []);
+
+    useEffect(() => {
+        console.log(process.env.REACT_APP_SERVER_PORT);
     }, []);
 
 
@@ -316,7 +321,7 @@ function Home({socket, socketId}) {
                         We are succesfully doing that through a friendly interface and simple framework.</p>
                 </div>   */}
            
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }

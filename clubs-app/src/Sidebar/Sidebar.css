@@ -49,6 +49,6 @@
 
 .group-container .icon
 {
-    color: var(--lightest-green);
+    color: rgba(255, 255, 255, .85);
     font-size: 22px;
 }

@@ -24,7 +24,7 @@ export default function UserAccount({socket, socketId}) {
             })
         };
         
-        const fetchResponse = await fetch("http://localhost:8080/user-exists", options);
+        const fetchResponse = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/user-exists`, options);
         const response = await fetchResponse.json();
         const result = await response.result;
         console.log(await result);
@@ -38,13 +38,16 @@ export default function UserAccount({socket, socketId}) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: username
+                id: username
             }),
         };
         
-        const fetchResponse = await fetch("http://localhost:8080/user-data", options);
+        const fetchResponse = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/user-data`, options);
         const response = await fetchResponse.json();
+        console.log(await response);
         setUserData(await response);
+
+        return await response;
     };
 
     const checkFriend = async () => {
@@ -59,35 +62,38 @@ export default function UserAccount({socket, socketId}) {
             })
         };
 
-        const fetchResponse = await fetch("http://localhost:8080/check-friend", options);
+        const fetchResponse = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/check-friend`, options);
         const response = await fetchResponse.json();
         setIsFriend(await response.result);
     };
 
     const addFriend = async () => {
-        
+        const updatedUserData = await getAccountData();
         const type = "friend";
         const message = `${localStorage.getItem("username")} sent you a friend request. Do you accept it?`;
         const to = username;
         const from = localStorage.getItem("username");
-        const socketId = userData["socket_id"];
+        const socketId = updatedUserData["socket_id"];
+        
+        const notification = {
+            type,
+            message,
+            to,
+            from,
+            id: localStorage.getItem("id")
+        };
 
-        socket.emit("push-notification", from, socketId, message, type);
+        socket.emit("push-notification", notification, socketId);
 
         const options = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                type,
-                message,
-                to,
-                from
-            })
+            body: JSON.stringify(notification)
         };
 
-        const responseFetch = await fetch("http://localhost:8080/push-notification", options);
+        const responseFetch = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/push-notification`, options);
         const response = await responseFetch.json();
         const result = await response.result;
         console.log("Result: ", result);
@@ -105,7 +111,7 @@ export default function UserAccount({socket, socketId}) {
             })
         };
 
-        const responseFetch = await fetch("http://localhost:8080/remove-friend", options);
+        const responseFetch = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/remove-friend`, options);
         const response = await responseFetch.json();
         const result = await response.result;
 
@@ -114,30 +120,26 @@ export default function UserAccount({socket, socketId}) {
 
     useEffect(() => {
         (async () => {
+            if (localStorage.getItem("username") === username) navigate(-1);
             const exist = await accountExists();
             if (!await exist) navigate(-1);
-            await getAccountData();
+            const data = await getAccountData();
+           
             await checkFriend();
         })();
     }, []);
     
     return (
         <div>
-            <Header />
-            <div className="container sign-up-mode">
-                <div className="text11" >
-                    <h1>Those are your account details!</h1>
-
-                    <h3>You can easily update them!</h3>
-                </div> 
-                <div className="account-details">
-                    <div className="image">
-                        <FontAwesomeIcon icon={faUser}/>
-                    </div>
-
-                    <h2 className="name">{username}</h2>
-                    <button type="button" onClick={async () => isFriend ? await removeFriend() : await addFriend()}>{isFriend ? "Remove friend" : "Send friend request"}</button>
+            <Header socket={socket} socketId={socketId} />
+            <div className="account-details">
+                <div className="image">
+                    <FontAwesomeIcon icon={faUser} className="user" />
                 </div>
+
+                <h2 className="name">{username}</h2>
+                { isFriend ? <p>You are friend with <b>{username}</b></p> : <p>You are not friend with <b>{username}</b> <br /> Would you like to add him/her?</p> }
+                <button type="button" onClick={async () => isFriend ? await removeFriend() : await addFriend()}>{isFriend ? "Remove friend" : "Send friend request"}</button>
             </div>
         </div>
     );

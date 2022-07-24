@@ -43,7 +43,7 @@ export default function Signin({socket, socketId}) {
       })
     };
 
-    const resJSON = await fetch("http://localhost:8080/login", options);
+    const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/login`, options);
     const res = await resJSON.json();
 
     if (await res.error) {
@@ -88,7 +88,7 @@ export default function Signin({socket, socketId}) {
       })
     };
 
-    const resJSON = await fetch("http://localhost:8080/signup", options);
+    const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/signup`, options);
     const res = await resJSON.json();
 
     if (res.error) {

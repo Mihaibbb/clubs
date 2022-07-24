@@ -418,6 +418,60 @@ textarea
   }
 }
 
+.account-details 
+{
+  width: 100%;
+  min-height: 50vh;
+  margin-top: 5rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+}
+
+.account-details .image 
+{
+ 
+}
+
+.account-details .image .user 
+{
+  background: linear-gradient(var(--lightest-green), var(--darkest-green));
+  font-size: 150px;
+  padding: 30px 40px;
+  border-radius: 50%;
+}
+
+.account-details h2 
+{
+  font-size: 40px;
+  margin-top: 10px;
+}
+
+.account-details p
+{
+  margin: 20px auto;
+  color: rgba(255, 255, 255, .75);
+
+}
+
+.account-details button 
+{
+  width: 100%;
+  max-width: 250px;
+  height: 40px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  background: linear-gradient(135deg, var(--lightest-green), var(--darkest-green));
+  color: #fff;
+  font-family: "DM Sans";
+  font-weight: 500;
+  font-size: 18px;
+  cursor: pointer;
+}
+
 @media (max-width: 570px) {
   .form {
     padding: 0 1.5rem;

@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Header from "../Components/Header";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router";
+import FriendsList from "../Friends/FriendsList";
 
 export default function Account({socket, socketId}) {
 
@@ -29,7 +30,7 @@ export default function Account({socket, socketId}) {
         })
     };
 
-    await fetch("http://localhost:8080/update-account", options);
+    await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/update-account`, options);
     localStorage.setItem("first-name", firstName);
     localStorage.setItem("last-name", lastName);
     localStorage.setItem("username", username);
@@ -79,6 +80,10 @@ export default function Account({socket, socketId}) {
             </div>
 
             <input type="submit" value="Update account" className="solid btn" onClick={async () => await updateAccount()} />
+          </div>
+
+          <div className="friends-container">
+            <FriendsList />
           </div>
         </div>
         

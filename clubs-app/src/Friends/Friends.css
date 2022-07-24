@@ -1,0 +1,69 @@
+.friends-list
+{
+    
+}
+
+.friends-list .friend-container
+{
+    width: 100%;
+    max-width: 350px;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 2.5rem auto;
+    color: #fff;
+    background: linear-gradient(135deg, var(--lightest-green), var(--darkest-green));
+    border-radius: 1.5rem;
+    padding: .45rem .5rem;
+    position: relative;
+}
+
+
+
+.options-content
+{
+  
+}
+
+.options-content button 
+{
+    width: fit-content;
+    padding: 0 2rem;
+    height: 45px;
+    border-radius: 1.5rem;
+    background: var(--darkest-green);
+    color: #fff;
+    font-family: "DM Sans";
+    font-size: 22px;
+
+    
+}
+
+.selectable 
+{
+    width: 100%;
+    max-width: 35px;
+    height: 35px;
+    border: 2px solid rgba(255, 255, 255, .75);
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 10px;
+}
+
+.selectable .check-icon 
+{
+    font-size: 25px;
+    padding: 1rem;
+
+    opacity: 0;
+    transition: all 250ms ease-in-out;
+}
+
+.selectable .check-icon.show 
+{
+    opacity: 1;
+}

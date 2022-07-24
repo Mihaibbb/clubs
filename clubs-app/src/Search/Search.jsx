@@ -30,12 +30,13 @@ export default function Search({socket, socketId}) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                query: query
+                query: query,
+                id: localStorage.getItem("id")
             })
         };
 
-        const responseClubs = await fetch("http://localhost:8080/search-club", options);
-        const responseUsers = await fetch("http://localhost:8080/search-people", options);
+        const responseClubs = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/search-club`, options);
+        const responseUsers = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/search-people`, options);
         const resClubs = await responseClubs.json();
         const resUsers = await responseUsers.json();
         console.log(resClubs, resUsers);
@@ -65,7 +66,7 @@ export default function Search({socket, socketId}) {
                     <div className="users-response">
                         <h2 className="category-title">{userResults.length} users found</h2>
                         {userResults && userResults.map((userResult, idx) => (
-                            <div className="user-result result" key={idx}>
+                            <div className="user-result result" key={idx} onClick={() => navigation(`/account/${userResult.username}`)}>
                                 <h3><FontAwesomeIcon icon={faUser} /> {userResult.username}</h3>
                             </div>
                         ))}

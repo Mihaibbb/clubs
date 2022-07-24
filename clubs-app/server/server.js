@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt');
 
 const io = require('socket.io')(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://192.168.1.11:3000"]
+        origin: [process.env.URL, process.env.URL2]
     }
 });
 
@@ -201,7 +201,7 @@ app.post('/create-club', (req, res) => {
 }); 
 
 app.post('/join-club', (req, res) => {
-    
+    console.log("JOIN", req);
     sql = 'SELECT * FROM ?? WHERE id = ?';
     database.query(sql, ['users', req.body.id], (err, rows) => {
         if (err) throw err;
@@ -210,7 +210,12 @@ app.post('/join-club', (req, res) => {
             return;
         }
         const row = rows[0];
-        const newClubs = [...JSON.parse(row['clubs']), {
+        const currClubs = JSON.parse(row['clubs']);
+        if (currClubs.length) {
+            if (currClubs.some(club => club.id === req.body.clubId)) return;
+        } 
+
+        const newClubs = [...currClubs, {
             id: req.body.clubId,
             name: req.body.clubName,
             owner: false,
@@ -250,21 +255,23 @@ app.post('/join-club', (req, res) => {
     });
 });
 
-app.post("remove-from-club", (req, res) => {
-    const { id, clubId } = req.body;
-    if (id === 1) return;
-    sql = "SELECT * FROM ?? WHERE id = ?";
-    database.query(sql, ["users", id], (err, rows) => {
+app.post("/remove-from-club", (req, res) => {
+    console.log(req.body);
+    const { username, clubId } = req.body;
+    sql = "SELECT * FROM ?? WHERE username = ?";
+    database.query(sql, ["users", username], (err, rows) => {
         if (err) {
             res.status(404).json({ message: "User not found!" });
             return;
         }
-        const username = rows[0]["username"];
+        const id = rows[0]["id"];
+        if (id === 1) return;
         sql = "DELETE FROM ?? WHERE username = ?";
 
         database.query(sql, [`${clubId}_users`, username], (err, result) => {
             if (err) throw err;
-            if (result) res.status(200).json({ result: true });
+            console.log("Res", result);
+            res.status(200).json({ result: true });
         });
     })
 });
@@ -350,7 +357,7 @@ app.post("/remove-notification", (req, res) => {
 
         const notifications = JSON.parse(rows[0]["notifications"]);
         const newNotifications = notifications.filter((notification, idx) => idx !== dbId);
-
+        console.log("NEW NOTIFICATIONS", newNotifications)
         sql = "UPDATE ?? SET notifications = ? WHERE id = ?";
         database.query(sql, ["users", JSON.stringify(newNotifications), id], (err, result) => {
             if (err) throw err;
@@ -371,11 +378,7 @@ app.post("/push-notification", (req, res) => {
         }
 
         const adminNotifications = JSON.parse(rows[0]["notifications"]);
-        adminNotifications.unshift({
-            type: type,
-            from: from,
-            message: message
-        });
+        adminNotifications.unshift(req.body);
 
         console.log(adminNotifications);
 
@@ -428,10 +431,10 @@ app.post('/check-user-in-club', (req, res) => {
 });
 
 app.post("/get-members", (req, res) => {
-    sql = "SELECT * FROM ?? WHERE email = ?";
-    database.query(sql, [`${req.body.clubId}_users`, req.body.email], (err, rows) => {
+    sql = "SELECT * FROM ?? WHERE username != ?";
+    database.query(sql, [`${req.body.clubId}_users`, req.body.username], (err, rows) => {
         if (err) throw err;
-        res.json({ members: rows.length });
+        res.json(rows);
     });
 });
 
@@ -461,8 +464,8 @@ app.post("/search-club", (req, res) => {
 
 app.post("/search-people", (req, res) => {
     console.log("SEARCH PEOPLE", req.body);
-    sql = "SELECT * FROM ?? WHERE username LIKE concat('%' , ?, '%') OR email LIKE concat('%', ?, '%')";
-    database.query(sql, ["users", req.body.query, req.body.query], (err, rows) => {
+    sql = "SELECT * FROM ?? WHERE (username LIKE concat('%' , ?, '%') OR email LIKE concat('%', ?, '%')) AND id != ?";
+    database.query(sql, ["users", req.body.query, req.body.query, req.body.id], (err, rows) => {
         if (err) throw err;
         res.json(rows);
     });
@@ -728,16 +731,17 @@ app.post("/user-exists", (req, res) => {
 
 app.post("/user-data", (req, res) => {
     const { id } = req.body;
-    sql = "SELECT * FROM ?? WHERE id = ?";
-    database.query(sql, ["users", id], (err, rows) => {
+    sql = "SELECT * FROM ?? WHERE id = ? OR username = ?";
+    database.query(sql, ["users", id, id], (err, rows) => {
         if (err) throw err;
+        console.log("ROWS OOOO", rows[0]);
         res.json(rows[0]);
     });
 });
 
 
 io.on("connection", socket => {
-    console.log("Connected!");
+    console.log("Connected!", socket.id);
 
     socket.on("update_feed", (clubId, email) => {
 
@@ -745,7 +749,7 @@ io.on("connection", socket => {
         database.query(sql, [`${clubId}_users`, email], (err, rows) => {
             if (err) throw err;
             rows.forEach(row => {
-                console.log(row);
+              
                 socket.to(row["socket_id"]).emit("new_feed");
             })
         });
@@ -758,9 +762,9 @@ io.on("connection", socket => {
             if (rows.length !== 1) return;
             const row = rows[0];
             const clubs = JSON.parse(row["clubs"]);
-            console.log(clubs);
+          
             clubs && clubs.forEach(club => {
-                console.log("here x", club);
+            
                 sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
                 database.query(sql, [`${club.id}_users`, socket.id, email], (err2, result) => {
                     if (err2) throw err2;
@@ -768,10 +772,10 @@ io.on("connection", socket => {
                     database.query(sql, [`${club.id}_users`, socket.id, email], (err3, result) => {
                         if (err3) throw err3;
                         sql = "UPDATE ?? SET socket_id = ? WHERE email = ?";
-                        console.log(result);
+                    
                         database.query(sql, ["users", socket.id, email], (err, result) => {
                             if (err) throw err;
-                            console.log(result);
+                           
                         });
                     });
                 });
@@ -779,53 +783,10 @@ io.on("connection", socket => {
         });
     });
 
-    socket.on("request-add-friend", (username, friendUsername, message) => {
-        sql = "SELECT * FROM ?? WHERE username = ?";
-        database.query(sql, ["users", friendUsername], (err, rows) => {
-            if (err) throw err;
-            if (rows.length !== 1) return;
-            const friendSocket = rows[0]["socket_id"];
-            const friendNotifications = [...JSON.parse(rows[0]["notifications"]), {
-                message: message,
-                type: "friend-request"
-            }];
-            socket.to(friendSocket).emit("friend-request", username);            
-
-            sql = "UPDATE ?? SET notifications = ? WHERE username = ?";
-            database.query(sql, ["users", friendNotifications, friendUsername], (err, result) => {
-                if (err) throw err;
-                console.log(result);
-            });
-        });
-    });
-
-    socket.on("request-response", (username, response, message) => {
-        sql = "SELECT * FROM ?? WHERE username = ?";
-        database.query(sql, ["users", username], (err, rows) => {
-            if (err) throw err;
-            if (rows.length !== 1) return;
-            const friendSocket = rows[0]["socket_id"];
-            const friendNotifications = [...JSON.parse(rows[0]["notifications"]), {
-                message: message,
-                type: "friend-response"
-            }];
-            
-            sql = "UPDATE ?? SET notifications = ? WHERE username = ?";
-            database.query(sql, ["users", friendNotifications, username], (err, result) => {
-                if (err) throw err;
-                console.log(result);
-                socket.to(friendSocket).emit("friend-request-response", response);            
-            });
-        });
-    });
-
-    socket.on("push-notification", (from, socketAdmin, message, type) => {
-        const notification = { from, message, type };
-        console.log(socketAdmin);
+    socket.on("push-notification", (notification, socketAdmin) => {
+        console.log('pushing...');
         socket.to(socketAdmin).emit("pull-notification", notification);
     });
-
-    // Invite friend to group
 
     socket.on("disconnect", () => console.log("Disconnect"));
 });

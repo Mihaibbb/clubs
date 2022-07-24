@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import logo from "../img/uniclub.svg";
+import logo from "../img/Logo.svg";
+
 import './Footer.css';
 
 export default function Footer() {
@@ -18,10 +19,8 @@ export default function Footer() {
                 </div>
                 
                 <div className="logo">
-                    <Link to="/">
-                        <h4>Designed by: </h4>
-                    </Link>
-                    <img src={logo} width={50}/>
+                    
+                    <img src={logo} width={100}/>
                 </div>
 
                 <div className="right-container">

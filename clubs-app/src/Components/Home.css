@@ -394,6 +394,55 @@ h2.part-title
   max-width: 400px;
 }
 
+@media screen and (max-width: 1000px)  {
+  .banner h2,
+  .banner span
+  {
+    font-size: 5vw;
+  }
+
+  h2.part-title 
+  {
+    font-size: 7.5vw;
+  }
+
+  .part
+  {
+    margin: 5rem auto;
+    height: auto;
+  }
+  .part .part-container
+  {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+
+  .part .part-container .column p
+  {
+    text-align: center;
+  }
+
+  .part:not(.part-one)
+  {
+    height: auto;
+    margin: 50vh auto;
+    
+    gap: 5rem;
+  }
+
+  .part-two 
+  {
+    flex-direction: column-reverse;
+  }
+  
+  .part-three
+  {
+    flex-direction: column;
+  }
+
+
+}
+
 @keyframes fade_animation {
     from {
         opacity: 0;
@@ -405,10 +454,4 @@ h2.part-title
     }
 };
 
-@media screen and (max-width: 900px)
-{
-    .row
-    {
-        flex-direction: column;
-    }
-}
+

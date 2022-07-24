@@ -83,7 +83,7 @@ const Sidebar = (socketId) => {
 
       try {
 
-        const resJSON = await fetch("http://localhost:8080/people-in-club", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/people-in-club`, options);
         const res = await resJSON.json();
         console.log(await res.people, await res.id);
         console.log(res, res.people, members);
@@ -114,7 +114,7 @@ const Sidebar = (socketId) => {
         })
       };
 
-      const resJSON = await fetch("http://localhost:8080/get-clubs", options);
+      const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-clubs`, options);
       const clubs = await resJSON.json();
       console.log("CLUUUUBS", clubs, clubs.clubs);
       const currClubs = [];

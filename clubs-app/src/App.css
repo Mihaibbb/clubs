@@ -65,6 +65,7 @@ body {
 /* Track */
 ::-webkit-scrollbar-track {
   background: rgb(14, 14, 14); 
+  border-radius: 50px;
 }
  
 /* Handle */
@@ -80,3 +81,4 @@ body{
 /* ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(black,var(--lightest-green),var(--light-green),  var(--dark-green), white);
 } */
+

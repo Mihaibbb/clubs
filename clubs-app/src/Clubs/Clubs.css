@@ -71,15 +71,15 @@
 .clubs-container .club .icon 
 {
     position: absolute;
-    bottom: -40px;
-    left: -15px;
-    font-size: 70px;
+    bottom: -5px;
+    left: 5px;
+    font-size: 45px;
     
 }
 
 .clubs-container .club .icon img 
 {
-    width: 70px;
+    width: 40px;
 }
 
 .clubs-container .club .owner 
@@ -88,7 +88,7 @@
     right: 15px;
     top: 0px;
     color: #fff;
-    font-size: 30px;
+    font-size: 25px;
 }
 
 .clubs-container .club .club-title
@@ -121,7 +121,7 @@
 {
     color: #fff;
     transform: rotateY(180deg);
-    font-size: 30px;
+    font-size: 20px;
     transition: all 350ms ease-in-out;
 }
 

@@ -34,7 +34,7 @@ export default function Searchbar({ socket, socketId }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/search-club", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/search-club`, options);
         const rows = await resJSON.json();
         console.log(rows);
         setSearchedClubs(rows);
@@ -64,7 +64,7 @@ export default function Searchbar({ socket, socketId }) {
             })
         };
 
-        const resJSON = await fetch("http://localhost:8080/join-club", options);
+        const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/join-club`, options);
         const res = await resJSON.json();
         console.log(await res);
         const currClubs = JSON.parse(localStorage.getItem("clubs")) || [];
@@ -100,7 +100,7 @@ export default function Searchbar({ socket, socketId }) {
             })
           };
     
-          const resJSON = await fetch("http://localhost:8080/get-clubs", options);
+          const resJSON = await fetch(`${process.env.REACT_APP_URL}:${process.env.REACT_APP_SERVER_PORT}/get-clubs`, options);
           const clubs = await resJSON.json();
           console.log(clubs, clubs.clubs);
           setPersonalClubs(await clubs.clubs);

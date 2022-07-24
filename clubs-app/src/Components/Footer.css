@@ -36,6 +36,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 
 .footer .items li 
@@ -72,6 +73,7 @@
     justify-content: flex-end;
     align-items: center;
     gap: 1rem;
+   
 }
 
 .footer .items .right-container > *
@@ -84,9 +86,3 @@
     animation-delay: 1s;
 }
 
-@keyframes rotate_logo {
-   
-    100% {
-        transform: rotateZ(360deg);
-    }
-}

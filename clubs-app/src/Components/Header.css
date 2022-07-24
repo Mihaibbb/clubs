@@ -53,15 +53,22 @@
    
 }
 
-.header .items li 
+.header .items li
 {
     list-style-type: none;
+    cursor: pointer;
+}
+
+.header .items li:not(.notification)
+{
+  
     background: -webkit-linear-gradient(var(--lightest-green), var(--darkest-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    cursor: pointer;
+
     color: var(--text-color);
     font-size: 16px;
+    position: relative;
 }
 
 .header .items li .notifications-icon 
@@ -107,6 +114,32 @@
 .header .items .logo img {
    animation: animation 1s 1;
    
+}
+
+.notifications-item 
+{
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    position: relative;
+}
+
+.notifications-counter 
+{
+    background: rgb(113, 13, 33);
+   
+    border-radius: 100%;
+    position: absolute;
+    top: -100%;
+    right: -50%;
+}
+
+.notifications-counter p
+{
+    font-size: 15px;
+    color: #fff;
+    margin: .25rem .5rem;
+    font-family: "DM Sans";
 }
 
 
